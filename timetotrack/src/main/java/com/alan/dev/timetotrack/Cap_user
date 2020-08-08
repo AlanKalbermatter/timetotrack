@@ -1,0 +1,89 @@
+package com.alan.dev.timetotrack;
+
+import io.vertx.core.json.JsonObject;
+
+public class Cap_user {
+
+  private int cap_user_id;
+
+  private String cap_username;
+
+  private String cap_email;
+
+  private String cap_fullname;
+
+  String id = String.valueOf(Integer.parseInt(""));
+
+  public Cap_user(String cap_username, String cap_email, String cap_fullname) {
+    this.cap_user_id = Integer.parseInt("");
+    this.cap_username = cap_username;
+    this.cap_email = cap_email;
+    this.cap_fullname = cap_fullname;
+  }
+
+  public Cap_user(JsonObject json) {
+    this.cap_user_id = json.getInteger("cap_user_id");
+    this.cap_username = json.getString("cap_username");
+    this.cap_email = json.getString("cap_email");
+    this.cap_fullname = json.getString("cap_fullname");
+  }
+
+  public Cap_user() { this.cap_user_id = Integer.parseInt(""); }
+
+  public Cap_user(int cap_user_id, String cap_username, String cap_email, String cap_fullname) {
+    this.cap_user_id = cap_user_id;
+    this.cap_username = cap_username;
+    this.cap_email = cap_email;
+    this.cap_fullname = cap_fullname;
+
+  }
+
+  public JsonObject toJson() {
+    JsonObject json = new JsonObject()
+      .put("id",cap_user_id)
+      .put("username", cap_username)
+      .put("email", cap_email)
+      .put("fullname", cap_fullname);
+    if (id != null && !id.isEmpty()) {
+      json.put("_cap_user_id", cap_user_id);
+    }
+
+    return json;
+  }
+
+  public int getCap_user_id() {
+    return cap_user_id;
+  }
+
+  public String getCap_username() {
+    return cap_username;
+  }
+
+  public String getCap_email() {
+    return cap_email;
+  }
+
+  public String getCap_fullname() {
+    return cap_fullname;
+  }
+
+  public Cap_user setCap_user_id(int cap_user_id) {
+    this.cap_user_id = cap_user_id;
+    return this;
+  }
+
+  public Cap_user setCap_username(String cap_username) {
+    this.cap_username = cap_username;
+    return this;
+  }
+
+  public Cap_user setCap_email(String cap_email) {
+    this.cap_email = cap_email;
+    return this;
+  }
+
+  public Cap_user setCap_fullname(String cap_fullname) {
+    this.cap_fullname = cap_fullname;
+    return this;
+  }
+}
