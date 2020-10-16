@@ -1,26 +1,13 @@
 <script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
 <div id="app">
   <p>{{ message }}</p>
-  <h1>Projects</h1>
-  <li v-for="project in porjects">
-    {{ project.isbn }} - {{ project.title }}
-  </li>
 </div>
 
-<script lang="vue">
-new Vue({
- el: '#app',
- data: {
-   projects: null
- },
- mounted () {
-</script>
-<script lang="vue">
-  axios.get('/projects')
-    .then(response => (this.book = response.data)}
-    }
+<script>
+  new Vue({
+  el: '#app'.
+  data: {
+    message: 'Hello Vue.js!'
+  }
 })
-
 </script>
