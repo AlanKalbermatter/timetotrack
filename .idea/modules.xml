@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Customer/customer.iml" filepath="$PROJECT_DIR$/Customer/customer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Project/project.iml" filepath="$PROJECT_DIR$/Project/project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/timer-microservice/timer.iml" filepath="$PROJECT_DIR$/timer-microservice/timer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/timetotrack.iml" filepath="$PROJECT_DIR$/.idea/timetotrack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/User/user.iml" filepath="$PROJECT_DIR$/User/user.iml" />
+    </modules>
+  </component>
+</project>
