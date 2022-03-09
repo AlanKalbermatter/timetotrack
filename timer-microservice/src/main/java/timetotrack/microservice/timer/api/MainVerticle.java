@@ -2,6 +2,7 @@ package timetotrack.microservice.timer.api;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
 
 public class MainVerticle extends AbstractVerticle {
 
