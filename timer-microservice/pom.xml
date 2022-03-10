@@ -19,7 +19,7 @@
     <vertx.version>4.2.5</vertx.version>
     <junit-jupiter.version>5.7.0</junit-jupiter.version>
 
-    <main.verticle>timetotrack.microservice.timer.api.MainVerticle</main.verticle>
+    <main.verticle>timetotrack.microservice.timer.api.RestTimerAPIVerticle</main.verticle>
     <launcher.class>io.vertx.core.Launcher</launcher.class>
   </properties>
 
