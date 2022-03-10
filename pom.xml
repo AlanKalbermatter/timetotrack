@@ -17,6 +17,7 @@
     <module>project-microservice</module>
     <module>timer-microservice</module>
     <module>user-microservice</module>
+    <module>common-timetotrack-microservice</module>
   </modules>
 
   <properties>
@@ -89,6 +90,11 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-service-proxy</artifactId>
+      <version>4.2.5</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>

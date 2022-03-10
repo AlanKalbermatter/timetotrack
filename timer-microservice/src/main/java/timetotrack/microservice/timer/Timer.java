@@ -27,7 +27,7 @@ public class Timer {
     }
 
     public Timer(JsonObject timerJson) {
-//      OrderConverter.fromJson(timerJson, this);
+      TimerConverter.fromJson(timerJson, this);
     }
 
     public JsonObject toJson() {
