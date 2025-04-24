@@ -1,0 +1,6 @@
+{
+  "url": "jdbc:postgresql://localhost:5432/goldentimer",
+  "driver_class": "org.postgresql.Driver",
+  "user": "goldentimer",
+  "password": "goldentimer123"
+}
