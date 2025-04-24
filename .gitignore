@@ -1,8 +1,53 @@
-# IntelliJ project files
-.idea
-*.iml
+# Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
 
-# build files
-build
-target
-.vertx
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# DBeaver connections/cache
+.dbeaver/
+
+# Environment files
+.env
+*.env
+
+# Compiled classes
+*.class
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# JetBrains Rider / Android Studio / CLion
+*.ipr
+*.iws
+.idea/
+
+# Database dumps
+*.sql
+*.dump
+
+# Init scripts (if sensitive)
+init_db.sh
