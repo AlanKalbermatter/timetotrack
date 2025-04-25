@@ -18,4 +18,8 @@ public class UserService {
     public void getAllUsers(Handler<AsyncResult<List<User>>> resultHandler) {
         dao.fetchAll(resultHandler);
     }
+
+    public void createUser(User user, Handler<AsyncResult<User>> resultHandler) {
+        dao.createUser(user, resultHandler);
+    }
 }

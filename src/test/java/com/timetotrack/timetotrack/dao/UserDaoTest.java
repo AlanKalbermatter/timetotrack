@@ -30,12 +30,29 @@ public class UserDaoTest {
     }
 
     @Test
-    public void fetchAll_shouldReturnUsersFromDb(TestInfo testInfo) {
+    public void fetchAllShouldReturnUsersFromDb(TestInfo testInfo) {
         userDao.fetchAll(result -> {
             assertTrue(result.succeeded());
             List<User> users = result.result();
             assertNotNull(users);
             System.out.println("[" + testInfo.getDisplayName() + "] Usuarios cargados: " + users.size());
         });
+    }
+
+    @Test
+    public void createUserShouldSaveUserInDatabase(TestInfo testInfo) {
+        User user = new User(null, "testuser_" + System.currentTimeMillis(), "test@mail.com", "Test User");
+
+        userDao.createUser(user, res -> {
+            assertTrue(res.succeeded());
+            User saved = res.result();
+            assertNotNull(saved.id);
+            System.out.println("[" + testInfo.getDisplayName() + "] Inserted user ID: " + saved.id);
+        });
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        vertx.close();
     }
 }

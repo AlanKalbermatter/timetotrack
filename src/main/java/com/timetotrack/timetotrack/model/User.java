@@ -15,6 +15,15 @@ public class User {
         this.fullName = fullName;
     }
 
+    public static User fromJson(JsonObject json) {
+        return new User(
+                null,
+                json.getString("username"),
+                json.getString("email"),
+                json.getString("full_name")
+        );
+    }
+
     public JsonObject toJson() {
         return new JsonObject()
                 .put("id", id)

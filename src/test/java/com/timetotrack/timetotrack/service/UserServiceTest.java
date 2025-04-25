@@ -60,5 +60,23 @@ public class UserServiceTest {
             assertEquals("DB Error", result.cause().getMessage());
         });
     }
+
+    @Test
+    public void shouldCreateUserSuccessfully() {
+        User inputUser = new User(null, "lucas", "lucas@test.com", "Lucas Ramirez");
+        User savedUser = new User(42, "lucas", "lucas@test.com", "Lucas Ramirez");
+
+        doAnswer(invocation -> {
+            Handler<AsyncResult<User>> handler = invocation.getArgument(1);
+            handler.handle(Future.succeededFuture(savedUser));
+            return null;
+        }).when(userDao).createUser(eq(inputUser), any());
+
+        userService.createUser(inputUser, res -> {
+            assertTrue(res.succeeded());
+            assertEquals("lucas", res.result().username);
+            assertEquals(42, res.result().id);
+        });
+    }
 }
 
