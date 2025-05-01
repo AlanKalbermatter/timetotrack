@@ -9,10 +9,13 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserApiVerticle extends AbstractVerticle {
 
     private final UserService userService;
+    private static final Logger log = LoggerFactory.getLogger(UserApiVerticle.class);
 
     public UserApiVerticle(UserService userService) {
         this.userService = userService;
@@ -24,7 +27,8 @@ public class UserApiVerticle extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
         router.get("/api/users").handler(this::handleGetAllUsers);
         router.post("/api/users").handler(this::handleCreateUser);
-
+        router.get("/api/users/:id").handler(this::handleGetUserById);
+        router.put("/api/users/:id").handler(this::handleUpdateUser);
 
         vertx.createHttpServer()
                 .requestHandler(router)
@@ -73,5 +77,62 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
     }
+
+    private void handleGetUserById(RoutingContext ctx) {
+        String idParam = ctx.pathParam("id");
+        long id;
+
+        try {
+            id = Long.parseLong(idParam);
+        } catch (NumberFormatException e) {
+            ctx.response().setStatusCode(400).end("Invalid user ID");
+            return;
+        }
+
+        userService.getUserById(id, ar -> {
+            if (ar.succeeded()) {
+                User user = ar.result();
+                if (user != null) {
+                    ctx.response()
+                            .putHeader("Content-Type", "application/json")
+                            .end(JsonObject.mapFrom(user).encode());
+                } else {
+                    ctx.response().setStatusCode(404).end("User not found");
+                }
+            } else {
+                log.error("Error retrieving user by ID {}", id, ar.cause());
+                ctx.response().setStatusCode(500).end("Failed to retrieve user");
+            }
+        });
+    }
+
+    private void handleUpdateUser(RoutingContext ctx) {
+        String idParam = ctx.pathParam("id");
+        long id;
+        try {
+            id = Long.parseLong(idParam);
+        } catch (NumberFormatException e) {
+            ctx.response().setStatusCode(400).end("Invalid user ID");
+            return;
+        }
+
+        JsonObject body = ctx.body().asJsonObject();
+        User updatedUser = body.mapTo(User.class);
+        updatedUser.id = (int) id;
+
+        userService.updateUser(updatedUser, ar -> {
+            if (ar.succeeded()) {
+                ctx.response()
+                        .setStatusCode(200)
+                        .putHeader("Content-Type", "application/json")
+                        .end(JsonObject.mapFrom(ar.result()).encode());
+            } else {
+                ar.cause().printStackTrace();
+                ctx.response().setStatusCode(500).end("Error updating user");
+            }
+        });
+    }
+
+
 }
 

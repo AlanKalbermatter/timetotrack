@@ -1,83 +1,105 @@
 package com.timetotrack.timetotrack.dao;
 
+import com.timetotrack.timetotrack.constant.UserSQL;
 import com.timetotrack.timetotrack.model.User;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.JsonArray;
-import io.vertx.ext.jdbc.JDBCClient;
-import io.vertx.ext.sql.SQLConnection;
+import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.Tuple;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserDao {
 
-    private final JDBCClient jdbc;
+    private final Pool client;
 
-    public UserDao(JDBCClient jdbc) {
-        this.jdbc = jdbc;
+    public UserDao(Pool client) {
+        this.client = client;
     }
 
     public void fetchAll(Handler<AsyncResult<List<User>>> resultHandler) {
-        jdbc.getConnection(ar -> {
-            if (ar.failed()) {
-                resultHandler.handle(Future.failedFuture(ar.cause()));
-                return;
-            }
-
-            SQLConnection conn = ar.result();
-            conn.query("SELECT user_id, username, email, full_name FROM \"user\"", res -> {
-                if (res.succeeded()) {
-                    List<User> users = res.result().getResults().stream().map(row -> new User(
-                            row.getInteger(0),
-                            row.getString(1),
-                            row.getString(2),
-                            row.getString(3)
-                    )).collect(Collectors.toList());
-                    resultHandler.handle(Future.succeededFuture(users));
-                } else {
-                    resultHandler.handle(Future.failedFuture(res.cause()));
-                }
-                conn.close();
-            });
-        });
+        client.query(UserSQL.SELECT_ALL)
+                .execute(ar -> {
+                    if (ar.succeeded()) {
+                        List<User> users = new ArrayList<>();
+                        for (Row row : ar.result()) {
+                            users.add(mapRowToUser(row));
+                        }
+                        resultHandler.handle(Future.succeededFuture(users));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                    }
+                });
     }
 
     public void createUser(User user, Handler<AsyncResult<User>> resultHandler) {
-        String sql = "INSERT INTO \"user\" (username, email, full_name) VALUES (?, ?, ?) RETURNING user_id";
-
-        jdbc.getConnection(ar -> {
-            if (ar.failed()) {
-                resultHandler.handle(Future.failedFuture(ar.cause()));
-                return;
-            }
-
-            SQLConnection conn = ar.result();
-            JsonArray params = new JsonArray()
-                    .add(user.username)
-                    .add(user.email)
-                    .add(user.fullName);
-
-            conn.queryWithParams(sql, params, res -> {
-                if (res.succeeded()) {
-                    List<JsonArray> results = res.result().getResults();
-                    if (!results.isEmpty()) {
-                        int generatedId = results.get(0).getInteger(0);
-                        user.id = generatedId;
+        client.preparedQuery(UserSQL.INSERT_ONE)
+                .execute(Tuple.of(user.username, user.email, user.fullName), ar -> {
+                    if (ar.succeeded()) {
+                        Row row = ar.result().iterator().next();
+                        user.id = row.getInteger("user_id");
                         resultHandler.handle(Future.succeededFuture(user));
                     } else {
-                        System.out.println("INSERT succeeded but no ID returned!");
-                        resultHandler.handle(Future.failedFuture("Insert did not return ID"));
+                        ar.cause().printStackTrace();
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+
                     }
-                } else {
-                    res.cause().printStackTrace();
-                    resultHandler.handle(Future.failedFuture(res.cause()));
-                }
-                conn.close();
-            });
-        });
+                });
+    }
 
+    public void fetchById(long id, Handler<AsyncResult<User>> resultHandler) {
+        client.preparedQuery(UserSQL.SELECT_BY_ID)
+                .execute(Tuple.of(id), ar -> {
+                    if (ar.succeeded()) {
+                        if (ar.result().rowCount() > 0) {
+                            Row row = ar.result().iterator().next();
+                            User user = mapRowToUser(row);
+                            resultHandler.handle(Future.succeededFuture(user));
+                        } else {
+                            resultHandler.handle(Future.failedFuture("User not found with id: " + id));
+                        }
+                    } else {
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                    }
+                });
+    }
 
+    public void updateUser(User user, Handler<AsyncResult<User>> resultHandler) {
+        client.preparedQuery(UserSQL.UPDATE_ONE)
+                .execute(Tuple.of(
+                        user.username,
+                        user.email,
+                        user.fullName,
+                        user.id), ar -> {
+                    if (ar.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(user));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                    }
+                });
+    }
+
+    public void deleteUser(long id, Handler<AsyncResult<Void>> resultHandler) {
+        client.preparedQuery(UserSQL.DELETE_BY_ID)
+                .execute(Tuple.of(id), ar -> {
+                    if (ar.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture());
+                    } else {
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                    }
+                });
+    }
+
+    private User mapRowToUser(Row row) {
+        return new User(
+                row.getInteger("user_id"),
+                row.getString("username"),
+                row.getString("email"),
+                row.getString("full_name")
+        );
     }
 }

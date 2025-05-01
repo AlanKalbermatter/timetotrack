@@ -1,6 +1,8 @@
 {
-  "url": "jdbc:postgresql://localhost:5432/goldentimer",
-  "driver_class": "org.postgresql.Driver",
+  "host": "localhost",
+  "port": 5432,
+  "database": "goldentimer",
   "user": "goldentimer",
-  "password": "goldentimer123"
+  "password": "goldentimer123",
+  "maxPoolSize": 5
 }

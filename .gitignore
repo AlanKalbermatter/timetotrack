@@ -51,3 +51,5 @@ Thumbs.db
 
 # Init scripts (if sensitive)
 init_db.sh
+
+/logs/app.log

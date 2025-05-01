@@ -2,23 +2,19 @@ package com.timetotrack.timetotrack;
 
 import com.timetotrack.timetotrack.api.UserApiVerticle;
 import com.timetotrack.timetotrack.dao.UserDao;
+import com.timetotrack.timetotrack.database.DatabaseProvider;
 import com.timetotrack.timetotrack.service.UserService;
-import io.vertx.core.*;
-import io.vertx.ext.jdbc.JDBCClient;
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
+import io.vertx.sqlclient.Pool;
 
 public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
-    JsonObject dbConfig = new JsonObject()
-            .put("url", "jdbc:postgresql://localhost:5432/goldentimer")
-            .put("driver_class", "org.postgresql.Driver")
-            .put("user", "goldentimer")
-            .put("password", "goldentimer123");
+    Pool client = DatabaseProvider.createPgPool(vertx);
 
-    JDBCClient jdbc = JDBCClient.createShared(vertx, dbConfig);
-    UserDao userDao = new UserDao(jdbc);
+    UserDao userDao = new UserDao(client);
     UserService userService = new UserService(userDao);
 
     UserApiVerticle userApi = new UserApiVerticle(userService);
