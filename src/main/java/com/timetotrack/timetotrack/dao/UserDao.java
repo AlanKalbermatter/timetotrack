@@ -38,10 +38,10 @@ public class UserDao {
 
     public void createUser(User user, Handler<AsyncResult<User>> resultHandler) {
         client.preparedQuery(UserSQL.INSERT_ONE)
-                .execute(Tuple.of(user.username, user.email, user.fullName), ar -> {
+                .execute(Tuple.of(user.getUsername(), user.getEmail(), user.getFullName()), ar -> {
                     if (ar.succeeded()) {
                         Row row = ar.result().iterator().next();
-                        user.id = row.getInteger("user_id");
+                        user.setId(row.getInteger("user_id"));
                         resultHandler.handle(Future.succeededFuture(user));
                     } else {
                         ar.cause().printStackTrace();
@@ -71,10 +71,10 @@ public class UserDao {
     public void updateUser(User user, Handler<AsyncResult<User>> resultHandler) {
         client.preparedQuery(UserSQL.UPDATE_ONE)
                 .execute(Tuple.of(
-                        user.username,
-                        user.email,
-                        user.fullName,
-                        user.id), ar -> {
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getFullName(),
+                        user.getId()), ar -> {
                     if (ar.succeeded()) {
                         resultHandler.handle(Future.succeededFuture(user));
                     } else {

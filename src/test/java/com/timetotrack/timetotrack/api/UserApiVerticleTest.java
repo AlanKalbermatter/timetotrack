@@ -25,7 +25,7 @@ public class UserApiVerticleTest {
     void setUp(Vertx vertx, VertxTestContext testContext) {
         userService = mock(UserService.class);
 
-        vertx.deployVerticle(new UserApiVerticle(userService), testContext.succeeding(id -> testContext.completeNow()));
+        vertx.deployVerticle(new UserApiVerticle(userService, 8888), testContext.succeeding(id -> testContext.completeNow()));
     }
 
     @Test
