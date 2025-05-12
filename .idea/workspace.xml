@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a72f6bb-30a0-4117-adff-3a59a2b7a00a" name="Changes" comment="User first steps finalized">
+      <change afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/TODO.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/MainVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/VerticleCRUDCommons.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/api/CustomerApiVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/api/ProjectApiVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/api/SwaggerVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/api/TimeEntryApiVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/api/UserApiVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/constant/CustomerSQL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/constant/ProjectSQL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/constant/TimeEntrySQL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/constant/UserSQL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dao/CustomerDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dao/ProjectDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dao/TimeEntryDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dao/UserDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/database/DatabaseProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dependencyInjection/AppComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/dependencyInjection/AppModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/model/Customer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/model/Project.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/model/TimeEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/service/CustomerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/service/ProjectService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/service/TimeEntryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/timetotrack/timetotrack/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/dbconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/TestMainVerticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/api/CustomerApiVerticleTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/api/UserApiVerticleTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/dao/CustomerDaoTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/dao/UserDaoTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/service/CustomerServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/test/java/com/timetotrack/timetotrack/service/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/classes/dbconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/classes/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/classes/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideCustomerApiVerticleFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideCustomerDaoFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideCustomerServiceFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvidePoolFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideProjectApiVerticleFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideProjectDaoFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideProjectServiceFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideSwaggerVerticleFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideTimeEntryApiVerticleFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideTimeEntryDaoFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideTimeEntryServiceFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideUserApiVerticleFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideUserDaoFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideUserServiceFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/AppModule_ProvideVertxFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/generated-sources/annotations/com/timetotrack/timetotrack/dependencyInjection/DaggerAppComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/init_db.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/MainVerticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/api/CustomerApiVerticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/api/ProjectApiVerticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/api/UserApiVerticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/constant/CustomerSQL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/constant/ProjectSQL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/constant/UserSQL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/dao/CustomerDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/dao/ProjectDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/dao/UserDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/database/DatabaseProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/di/AppComponent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/di/AppModule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/model/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/model/Project.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/service/CustomerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/service/ProjectService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/timetotrack/timetotrack/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/dbconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/TestMainVerticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/api/CustomerApiVerticleTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/api/UserApiVerticleTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/dao/CustomerDaoTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/dao/UserDaoTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/service/CustomerServiceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/timetotrack/timetotrack/service/UserServiceTest.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AlanKalbermatter&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AlanKalbermatter/timetotrack.git&quot;,
+    &quot;accountId&quot;: &quot;c1574dc2-2f5a-42c4-b14e-81c9d95186a0&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2wMmdAbMVTyH3ao5b8zkfo44wwx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.CustomerDaoTest.createAndFetchCustomer.executor": "Run",
+    "JUnit.UserApiVerticleTest.executor": "Run",
+    "JUnit.UserDaoTest.createUserShouldSaveUserInDatabase.executor": "Run",
+    "JUnit.UserDaoTest.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/Users/alankalbermatter/Library/Application Support/JetBrains/IntelliJIdea2025.1/plugins/Shell Script/shellcheck",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/alankalbermatter/Workspace/timetotrack/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.CustomerDaoTest.createAndFetchCustomer">
+    <configuration name="CustomerDaoTest.createAndFetchCustomer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="timetotrack" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.timetotrack.timetotrack.dao.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.timetotrack.timetotrack.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.timetotrack.timetotrack.dao.CustomerDaoTest" />
+      <option name="METHOD_NAME" value="createAndFetchCustomer(io.vertx.junit5.VertxTestContext)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserApiVerticleTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="timetotrack" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.timetotrack.timetotrack.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.timetotrack.timetotrack.api" />
+      <option name="MAIN_CLASS_NAME" value="com.timetotrack.timetotrack.api.UserApiVerticleTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserDaoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="timetotrack" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.timetotrack.timetotrack.dao.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.timetotrack.timetotrack.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.timetotrack.timetotrack.dao.UserDaoTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserDaoTest.createUserShouldSaveUserInDatabase" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="timetotrack" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.timetotrack.timetotrack.dao.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.timetotrack.timetotrack.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.timetotrack.timetotrack.dao.UserDaoTest" />
+      <option name="METHOD_NAME" value="createUserShouldSaveUserInDatabase(org.junit.jupiter.api.TestInfo)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.CustomerDaoTest.createAndFetchCustomer" />
+        <item itemvalue="JUnit.UserDaoTest" />
+        <item itemvalue="JUnit.UserApiVerticleTest" />
+        <item itemvalue="JUnit.UserDaoTest.createUserShouldSaveUserInDatabase" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a72f6bb-30a0-4117-adff-3a59a2b7a00a" name="Changes" comment="" />
+      <created>1745859901577</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745859901577</updated>
+      <workItem from="1745859902848" duration="23792000" />
+      <workItem from="1746020895002" duration="39492000" />
+      <workItem from="1746830305593" duration="20428000" />
+    </task>
+    <task id="LOCAL-00001" summary="User first steps finalized">
+      <option name="closed" value="true" />
+      <created>1746059405630</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1746059405630</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="User first steps finalized" />
+    <option name="LAST_COMMIT_MESSAGE" value="User first steps finalized" />
+  </component>
+</project>
