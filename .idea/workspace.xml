@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a72f6bb-30a0-4117-adff-3a59a2b7a00a" name="Changes" comment="Frontend first commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eslint.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/public/vite.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/vite.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/src/assets/react.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/react.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/timetotrack-frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.js" afterDir="false" />
-    </list>
+    <list default="true" id="7a72f6bb-30a0-4117-adff-3a59a2b7a00a" name="Changes" comment="Frontend first commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,12 +55,13 @@
     "JUnit.UserApiVerticleTest.executor": "Run",
     "JUnit.UserDaoTest.createUserShouldSaveUserInDatabase.executor": "Run",
     "JUnit.UserDaoTest.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "SHELLCHECK.PATH": "/Users/alankalbermatter/Library/Application Support/JetBrains/IntelliJIdea2025.1/plugins/Shell Script/shellcheck",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/alankalbermatter/Workspace/timetotrack/frontend",
+    "last_opened_file_path": "/Users/alankalbermatter/Workspace/timetotrack",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -187,6 +174,7 @@
       <workItem from="1745859902848" duration="23792000" />
       <workItem from="1746020895002" duration="39492000" />
       <workItem from="1746830305593" duration="20713000" />
+      <workItem from="1747264234102" duration="39000" />
     </task>
     <task id="LOCAL-00001" summary="User first steps finalized">
       <option name="closed" value="true" />

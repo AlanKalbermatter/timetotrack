@@ -1,16 +1,16 @@
 # Maven
-/backend/target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 .mvn/wrapper/maven-wrapper.properties
 
 # IntelliJ IDEA
-/backend/.idea/
+.idea/
 *.iml
 *.iws
 out/
 
 # Logs
-/backend/logs/
+logs/
 *.log
 
 # Sistema
