@@ -8,7 +8,8 @@ public class User {
     private String email;
     private String fullName;
 
-    public User() {}
+    public User() {
+    }
 
     public User(Integer id, String username, String email, String fullName) {
         this.id = id;

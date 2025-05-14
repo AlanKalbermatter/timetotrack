@@ -125,4 +125,10 @@ public class AppModule {
     SwaggerVerticle provideSwaggerVerticle() {
         return new SwaggerVerticle(swaggerPort);
     }
+
+    @Provides
+    @Singleton
+    GatewayVerticle provideGatewayVerticle() {
+        return new GatewayVerticle();
+    }
 }

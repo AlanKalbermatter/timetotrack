@@ -5,7 +5,9 @@ import com.timetotrack.timetotrack.model.Customer;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.sqlclient.*;
+import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;

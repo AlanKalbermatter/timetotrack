@@ -1,6 +1,5 @@
 package com.timetotrack.timetotrack.api;
 
-import com.timetotrack.timetotrack.VerticleCRUDCommons;
 import com.timetotrack.timetotrack.model.User;
 import com.timetotrack.timetotrack.service.UserService;
 import io.vertx.core.AbstractVerticle;
@@ -15,13 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class UserApiVerticle 
+public class UserApiVerticle
         extends AbstractVerticle
         implements VerticleCRUDCommons {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserApiVerticle.class);
     private final UserService userService;
     private final int port;
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserApiVerticle.class);
 
     public UserApiVerticle(UserService userService, int port) {
         this.userService = userService;
@@ -153,7 +152,7 @@ public class UserApiVerticle
             }
         });
     }
-    
+
     public void handleDelete(RoutingContext routingContext) {
         long id = Long.parseLong(routingContext.pathParam("id"));
         userService.deleteUser(id, ar -> {

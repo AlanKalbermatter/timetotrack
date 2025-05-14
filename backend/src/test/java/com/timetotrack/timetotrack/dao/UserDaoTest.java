@@ -4,10 +4,15 @@ import com.timetotrack.timetotrack.database.DatabaseProvider;
 import com.timetotrack.timetotrack.model.User;
 import io.vertx.core.Vertx;
 import io.vertx.sqlclient.Pool;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserDaoTest {
 
@@ -20,6 +25,11 @@ public class UserDaoTest {
         vertx = Vertx.vertx();
         client = DatabaseProvider.createPgPool(vertx);
         userDao = new UserDao(client);
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        vertx.close();
     }
 
     @Test
@@ -42,10 +52,5 @@ public class UserDaoTest {
             assertNotNull(saved.id);
             System.out.println("[" + testInfo.getDisplayName() + "] Inserted user ID: " + saved.id);
         });
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        vertx.close();
     }
 }

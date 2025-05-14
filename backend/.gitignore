@@ -1,55 +1,19 @@
 # Maven
-/target/
+/backend/target/
 !.mvn/wrapper/maven-wrapper.jar
 .mvn/wrapper/maven-wrapper.properties
 
 # IntelliJ IDEA
-backend/.idea/
+/backend/.idea/
 *.iml
 *.iws
 out/
 
-# Eclipse
-.project
-.classpath
-.settings/
-
-# VS Code
-.vscode/
-
 # Logs
+/backend/logs/
 *.log
 
-# OS files
+# Sistema
 .DS_Store
 Thumbs.db
-
-# DBeaver connections/cache
-.dbeaver/
-
-# Environment files
-.env
-*.env
-
-# Compiled classes
-*.class
-
-# Temporary files
-*.tmp
-*.bak
-*.swp
-*.swo
-
-# JetBrains Rider / Android Studio / CLion
-*.ipr
-*.iws
-backend/.idea/
-
-# Database dumps
-*.sql
-*.dump
-
-# Init scripts (if sensitive)
-init_db.sh
-
-/backend/logs/app.log
+/init_db.sh

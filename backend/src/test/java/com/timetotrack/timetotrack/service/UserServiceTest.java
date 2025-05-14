@@ -32,8 +32,8 @@ public class UserServiceTest {
         }).when(userDao).createUser(any(User.class), any());
 
         userService.createUser(user, result -> {
-            assert(result.succeeded());
-            assert(result.result().username.equals("testuser"));
+            assert (result.succeeded());
+            assert (result.result().username.equals("testuser"));
         });
 
         verify(userDao, times(1)).createUser(any(User.class), any());

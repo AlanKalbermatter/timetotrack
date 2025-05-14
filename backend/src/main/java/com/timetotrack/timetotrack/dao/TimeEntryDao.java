@@ -5,7 +5,9 @@ import com.timetotrack.timetotrack.model.TimeEntry;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.sqlclient.*;
+import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +16,8 @@ import java.util.List;
 
 public class TimeEntryDao {
 
-    private final Pool client;
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeEntryDao.class);
+    private final Pool client;
 
     public TimeEntryDao(Pool client) {
         this.client = client;

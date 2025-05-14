@@ -5,7 +5,8 @@ public class Project {
     private String name;
     private Integer customerId;
 
-    public Project() {}
+    public Project() {
+    }
 
     public Project(Integer id, String name, Integer customerId) {
         this.id = id;

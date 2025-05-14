@@ -1,6 +1,7 @@
 # ⏱️ TimeToTrack
 
-**TimeToTrack** is a reactive time-tracking application built with **pure Vert.x**, PostgreSQL, and JDBC. It's designed to help users log their working hours per project, track productivity, and generate meaningful insights.
+**TimeToTrack** is a reactive time-tracking application built with **pure Vert.x**, PostgreSQL, and JDBC. It's designed
+to help users log their working hours per project, track productivity, and generate meaningful insights.
 
 ## 🛠️ Technologies
 
@@ -12,16 +13,21 @@
 - DBeaver (optional, for DB management)
 
 ## 📂 Project Structure
+
 ```text
 src/
 └── main/
     └── java/com/timetotrack/timetotrack/
         ├── api/
+        ├── constant/
         ├── dao/
+        ├── database/
+        ├── dependencyInjection
         ├── model/
         ├── service/
         └── MainVerticle
 ```
+
 ## ⚙️ Database Setup
 
 Run the initialization script:
@@ -29,6 +35,7 @@ Run the initialization script:
 ```bash
   ./init_db.sh
 ```
+
 This will:
 
 Create the database goldentimer
@@ -53,5 +60,6 @@ Access the default endpoint: ``GET http://localhost:8888/api/users``
 ```
 
 ## 👤 Author
+
 Developed by Alan Kalbermatter, 2025\
 Built with clean architecture and love.

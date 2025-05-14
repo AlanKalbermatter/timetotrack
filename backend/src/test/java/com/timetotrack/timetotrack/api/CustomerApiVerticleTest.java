@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(VertxExtension.class)
 public class CustomerApiVerticleTest {
 
-    private static WebClient client;
     private static final AtomicInteger dynamicPort = new AtomicInteger(8889);
+    private static WebClient client;
 
     @BeforeAll
     static void setup(Vertx vertx, VertxTestContext ctx) {

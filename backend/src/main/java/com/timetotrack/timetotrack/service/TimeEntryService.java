@@ -1,7 +1,6 @@
 package com.timetotrack.timetotrack.service;
 
 import com.timetotrack.timetotrack.dao.TimeEntryDao;
-import com.timetotrack.timetotrack.model.Project;
 import com.timetotrack.timetotrack.model.TimeEntry;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;

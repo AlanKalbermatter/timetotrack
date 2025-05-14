@@ -4,7 +4,8 @@ public class Customer {
     private Integer id;
     private String name;
 
-    public Customer() {}
+    public Customer() {
+    }
 
     public Customer(Integer id, String name) {
         this.id = id;

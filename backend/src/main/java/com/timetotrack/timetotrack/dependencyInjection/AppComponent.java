@@ -9,8 +9,14 @@ import javax.inject.Singleton;
 @Component(modules = {AppModule.class})
 public interface AppComponent {
     UserApiVerticle userApiVerticle();
+
     CustomerApiVerticle customerApiVerticle();
+
     ProjectApiVerticle projectApiVerticle();
+
     TimeEntryApiVerticle timeEntryApiVerticle();
+
     SwaggerVerticle swaggerVerticle();
+
+    GatewayVerticle gatewayVerticle();
 }

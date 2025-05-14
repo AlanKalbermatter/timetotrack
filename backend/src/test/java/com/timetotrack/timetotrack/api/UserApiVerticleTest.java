@@ -49,7 +49,7 @@ public class UserApiVerticleTest {
                 .sendJsonObject(payload)
                 .onComplete(ar -> {
                     if (ar.succeeded()) {
-                        assert(ar.result().statusCode() == 201);
+                        assert (ar.result().statusCode() == 201);
                         testContext.completeNow();
                     } else {
                         testContext.failNow(ar.cause());

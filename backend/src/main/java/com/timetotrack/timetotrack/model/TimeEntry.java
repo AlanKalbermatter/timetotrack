@@ -9,7 +9,8 @@ public class TimeEntry {
     private Integer projectId;
     private Integer userId;
 
-    public TimeEntry() {}
+    public TimeEntry() {
+    }
 
     public TimeEntry(Long id, LocalDateTime fromTime, LocalDateTime toTime, Integer projectId, Integer userId) {
         this.id = id;

@@ -2,7 +2,8 @@ package com.timetotrack.timetotrack.service;
 
 import com.timetotrack.timetotrack.dao.CustomerDao;
 import com.timetotrack.timetotrack.model.Customer;
-import io.vertx.core.*;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 
 import java.util.List;
 

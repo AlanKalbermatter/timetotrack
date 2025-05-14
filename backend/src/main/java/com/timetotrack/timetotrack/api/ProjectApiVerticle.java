@@ -1,6 +1,5 @@
 package com.timetotrack.timetotrack.api;
 
-import com.timetotrack.timetotrack.VerticleCRUDCommons;
 import com.timetotrack.timetotrack.model.Project;
 import com.timetotrack.timetotrack.service.ProjectService;
 import io.vertx.core.AbstractVerticle;

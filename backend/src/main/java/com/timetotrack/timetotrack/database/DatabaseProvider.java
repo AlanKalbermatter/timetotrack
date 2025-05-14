@@ -2,8 +2,8 @@ package com.timetotrack.timetotrack.database;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgBuilder;
+import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.PoolOptions;
 
