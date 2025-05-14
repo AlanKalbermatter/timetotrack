@@ -4,67 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="770242f5-7801-4982-8a3e-8e033c3b1bf6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/axios.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/users.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Header.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Sidebar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/charts/WeeklyTimeChart.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/modals/NewCustomerModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/modals/NewProjectModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/modals/NewTimeEntryModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/modals/NewUserModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/context/ThemeContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/layout/MainLayout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Customers.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Dashboard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Projects.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Settings.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/TimeEntries.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Users.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tailwind.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types/jsx.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/MainVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/MainVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/VerticleCRUDCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/VerticleCRUDCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/CustomerApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/CustomerApiVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/ProjectApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/ProjectApiVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/TimeEntryApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/TimeEntryApiVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/UserApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/api/UserApiVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/CustomerDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/CustomerDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/TimeEntryDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/TimeEntryDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/UserDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dao/UserDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/database/DatabaseProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/database/DatabaseProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dependencyInjection/AppComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/dependencyInjection/AppComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/TimeEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/TimeEntry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/service/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/service/CustomerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/service/TimeEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/timetotrack/timetotrack/service/TimeEntryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/TestMainVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/TestMainVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/api/CustomerApiVerticleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/api/CustomerApiVerticleTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/api/UserApiVerticleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/api/UserApiVerticleTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/dao/CustomerDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/dao/CustomerDaoTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/dao/UserDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/dao/UserDaoTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/service/CustomerServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/service/CustomerServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/service/UserServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/com/timetotrack/timetotrack/service/UserServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/eslint.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/public/vite.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/src/App.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/src/assets/react.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/src/main.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../timetotrack-frontend/vite.config.js" beforeDir="false" />
-    </list>
+    <list default="true" id="770242f5-7801-4982-8a3e-8e033c3b1bf6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,7 +55,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1747094516752</updated>
-      <workItem from="1747094517925" duration="23178000" />
+      <workItem from="1747094517925" duration="23821000" />
     </task>
     <servers />
   </component>
