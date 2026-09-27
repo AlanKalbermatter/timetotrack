@@ -101,5 +101,19 @@ class TimeEntrySummaryTest extends IntegrationTest {
         assertEquals(400, summary("from=2025-01-01T00:00:00Z&to=2026-03-11T00:00:00Z").status());
         assertEquals(400, summary("from=2026-03-09T00:00:00Z&to=2026-03-11T00:00:00Z&tz=Mars/Olympus").status());
         assertEquals(400, summary("from=2026-03-09T00:00:00Z&to=2026-03-11T00:00:00Z&tz=%2B03:00").status());
+        // Prefixed offsets parse as ZoneRegion in Java but Postgres applies the inverted POSIX sign.
+        assertEquals(400, summary("from=2026-03-09T00:00:00Z&to=2026-03-11T00:00:00Z&tz=GMT%2B3").status());
+        assertEquals(400, summary("from=2026-03-09T00:00:00Z&to=2026-03-11T00:00:00Z&tz=UTC%2B03:00").status());
+        assertEquals(400, summary("from=2026-03-09T00:00:00Z&to=2026-03-11T00:00:00Z&tz=UT-5").status());
+    }
+
+    @Test
+    void acceptsIanaFixedOffsetZones() {
+        fixtures.entry(ana, web, at("2026-03-10T22:30:00Z"), at("2026-03-10T23:00:00Z")); // 01:30 on the 11th at UTC+3
+
+        Response response = summary("from=2026-03-10T22:00:00Z&to=2026-03-11T00:00:00Z&tz=Etc/GMT-3");
+
+        assertEquals(new JsonArray().add(new JsonObject().put("date", "2026-03-11").put("seconds", 1800)),
+                response.json().getJsonArray("byDay"));
     }
 }

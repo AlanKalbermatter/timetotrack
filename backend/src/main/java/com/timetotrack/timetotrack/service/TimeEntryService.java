@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class TimeEntryService {
 
@@ -81,6 +82,8 @@ public class TimeEntryService {
     }
 
     static final Duration MAX_SUMMARY_RANGE = Duration.ofDays(366);
+    private static final Pattern PREFIXED_OFFSET = Pattern.compile("^(GMT|UTC|UT)[+-].*");
+    private static final String INVALID_ZONE = "tz must be an IANA time zone such as America/Argentina/Buenos_Aires";
 
     public Future<Summary> summary(int userId, Instant from, Instant to, String tz) {
         if (from == null || to == null) {
@@ -108,8 +111,8 @@ public class TimeEntryService {
     }
 
     /**
-     * Postgres interprets numeric offsets like "+03:00" with the POSIX (inverted) sign, so only
-     * region ids and UTC are accepted.
+     * Postgres interprets numeric offsets like "+03:00", "GMT+3" or "UTC+03:00" with the POSIX (inverted)
+     * sign, so only IANA ids (including Etc/GMT±N, which already use POSIX signs) and UTC are accepted.
      */
     private static String postgresZone(String tz) {
         if (tz == null) {
@@ -121,11 +124,14 @@ public class TimeEntryService {
                 if (offset.equals(ZoneOffset.UTC)) {
                     return "UTC";
                 }
-                throw new ValidationException("tz must be an IANA time zone such as America/Argentina/Buenos_Aires");
+                throw new ValidationException(INVALID_ZONE);
+            }
+            if (PREFIXED_OFFSET.matcher(zone.getId()).matches()) {
+                throw new ValidationException(INVALID_ZONE);
             }
             return zone.getId();
         } catch (DateTimeException e) {
-            throw new ValidationException("tz must be an IANA time zone such as America/Argentina/Buenos_Aires");
+            throw new ValidationException(INVALID_ZONE);
         }
     }
 
