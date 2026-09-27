@@ -66,7 +66,8 @@ public class GatewayVerticle extends AbstractVerticle {
     public void start(Promise<Void> startPromise) {
         client = WebClient.create(vertx, new WebClientOptions().setFollowRedirects(false));
         Router router = Router.router(vertx);
-        router.route().handler(BodyHandler.create().setBodyLimit(MAX_BODY_BYTES));
+        // JSON-only API: never let BodyHandler write multipart file parts to disk.
+        router.route().handler(BodyHandler.create(false).setBodyLimit(MAX_BODY_BYTES));
         router.route().handler(this::dispatch);
 
         vertx.createHttpServer()

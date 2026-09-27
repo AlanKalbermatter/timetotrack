@@ -76,13 +76,17 @@ public final class TestHttp {
     }
 
     public Response send(String method, String path, String rawBody) {
+        return send(method, path, "application/json", rawBody);
+    }
+
+    public Response send(String method, String path, String contentType, String rawBody) {
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + port + path))
                 .timeout(Duration.ofSeconds(15))
                 .method(method, rawBody == null
                         ? HttpRequest.BodyPublishers.noBody()
                         : HttpRequest.BodyPublishers.ofString(rawBody));
         if (rawBody != null) {
-            builder.header("Content-Type", "application/json");
+            builder.header("Content-Type", contentType);
         }
         headers.forEach(builder::header);
         try {

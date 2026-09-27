@@ -7,15 +7,18 @@ import com.timetotrack.timetotrack.support.Ports;
 import com.timetotrack.timetotrack.support.TestDatabase;
 import com.timetotrack.timetotrack.support.TestHttp;
 import com.timetotrack.timetotrack.support.TestHttp.Response;
+import com.timetotrack.timetotrack.support.Uploads;
 import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static com.timetotrack.timetotrack.support.Await.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Deploys the whole application and drives it only through the public gateway, like a client would. */
@@ -56,6 +59,16 @@ class ApiFlowTest extends IntegrationTest {
         assertEquals(200, spec.status());
         assertTrue(spec.body().startsWith("openapi: 3"));
         assertTrue(gateway.get("/api/docs").body().contains("swagger-ui"));
+    }
+
+    @Test
+    void unauthenticatedMultipartUploadsAreNeverWrittenToDisk() {
+        Uploads.deleteDirectory();
+
+        Response response = gateway.send("POST", "/api/nope", Uploads.CONTENT_TYPE, Uploads.BODY);
+
+        assertEquals(404, response.status());
+        assertFalse(Files.exists(Uploads.DIRECTORY), "the gateway wrote an unauthenticated upload to disk");
     }
 
     @Test

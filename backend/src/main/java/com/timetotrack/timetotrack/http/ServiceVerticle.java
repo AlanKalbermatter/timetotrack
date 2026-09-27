@@ -36,7 +36,8 @@ public abstract class ServiceVerticle extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) {
         Router router = Router.router(vertx);
-        router.route().handler(BodyHandler.create().setBodyLimit(MAX_BODY_BYTES));
+        // JSON-only API: never let BodyHandler write multipart file parts to disk.
+        router.route().handler(BodyHandler.create(false).setBodyLimit(MAX_BODY_BYTES));
         if (requiresUser()) {
             router.route().handler(ctx -> {
                 try {

@@ -4,6 +4,7 @@ import com.timetotrack.timetotrack.error.ValidationException;
 import com.timetotrack.timetotrack.support.Ports;
 import com.timetotrack.timetotrack.support.TestHttp;
 import com.timetotrack.timetotrack.support.TestHttp.Response;
+import com.timetotrack.timetotrack.support.Uploads;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -11,6 +12,8 @@ import io.vertx.ext.web.Router;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Files;
 
 import static com.timetotrack.timetotrack.support.Await.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,6 +120,16 @@ class ServiceVerticleTest {
         assertEquals(200, http.get("/items/12").status());
         assertEquals(400, http.get("/items/abc").status());
         assertEquals(400, http.get("/items/0").status());
+    }
+
+    @Test
+    void multipartUploadsAreNeverWrittenToDisk() {
+        Uploads.deleteDirectory();
+
+        Response response = http.send("POST", "/echo", Uploads.CONTENT_TYPE, Uploads.BODY);
+
+        assertEquals(400, response.status());
+        assertFalse(Files.exists(Uploads.DIRECTORY), "BodyHandler wrote the upload to " + Uploads.DIRECTORY);
     }
 
     @Test
