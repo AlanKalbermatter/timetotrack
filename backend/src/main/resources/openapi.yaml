@@ -1,182 +1,283 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: TimeToTrack API
   version: 1.0.0
-
+  description: >
+    Team time tracking. Register or log in to get a JWT, then send it as `Authorization: Bearer <token>`.
+    Errors are always `{"error": "<message>"}`.
+servers:
+  - url: /
+security:
+  - bearerAuth: []
 paths:
+  /api/auth/register:
+    post:
+      tags: [auth]
+      security: []
+      summary: Create an account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, username, fullName, password]
+              properties:
+                email: { type: string, format: email }
+                username: { type: string }
+                fullName: { type: string }
+                password: { type: string, minLength: 8 }
+      responses:
+        '201': { description: Registered, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/auth/login:
+    post:
+      tags: [auth]
+      security: []
+      summary: Log in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200': { description: Logged in, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '401': { $ref: '#/components/responses/Error' }
   /api/users:
     get:
-      summary: Get all users
+      tags: [users]
+      summary: Team directory
       responses:
-        '200':
-          description: List of users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-
-    post:
-      summary: Create a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: User created
-
-  /api/users/{id}:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/User' } } } } }
+  /api/users/me:
     get:
-      summary: Get user by ID
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
+      tags: [users]
+      summary: Current user
       responses:
-        '200':
-          description: A single user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-
-    put:
-      summary: Update user by ID
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: User updated
-
-  /api/users/{id}/time-entries:
-    get:
-      summary: Get time entries for a specific user
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: List of time entries
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TimeEntry'
-
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
   /api/customers:
     get:
-      summary: Get all customers
+      tags: [customers]
+      summary: List customers
       responses:
-        '200':
-          description: List of customers
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Customer' } } } } }
     post:
-      summary: Create a new customer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Customer'
+      tags: [customers]
+      summary: Create a customer
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CustomerInput' } } } }
       responses:
-        '201':
-          description: Customer created
-
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Customer' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/customers/{id}:
+    parameters: [ { $ref: '#/components/parameters/Id' } ]
+    get:
+      tags: [customers]
+      summary: Get a customer
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Customer' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [customers]
+      summary: Rename a customer
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CustomerInput' } } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Customer' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [customers]
+      summary: Delete a customer without projects
+      responses:
+        '204': { description: Deleted }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
   /api/projects:
     get:
-      summary: Get all projects
+      tags: [projects]
+      summary: List projects
       responses:
-        '200':
-          description: List of projects
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Project'
-
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Project' } } } } }
     post:
-      summary: Create a new project
+      tags: [projects]
+      summary: Create a project
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ProjectInput' } } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Project' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/projects/{id}:
+    parameters: [ { $ref: '#/components/parameters/Id' } ]
+    get:
+      tags: [projects]
+      summary: Get a project
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Project' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [projects]
+      summary: Update a project
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ProjectInput' } } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Project' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [projects]
+      summary: Delete a project without time entries
+      responses:
+        '204': { description: Deleted }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/time-entries:
+    get:
+      tags: [time-entries]
+      summary: Caller's entries overlapping a range (default last 30 days), newest first
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date-time } }
+        - { name: to, in: query, schema: { type: string, format: date-time } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/TimeEntry' } } } } }
+    post:
+      tags: [time-entries]
+      summary: Log a finished block of time
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
+              type: object
+              required: [projectId, from, to]
+              properties:
+                projectId: { type: integer }
+                description: { type: string, maxLength: 500 }
+                from: { type: string, format: date-time }
+                to: { type: string, format: date-time }
       responses:
-        '201':
-          description: Project created
-
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/TimeEntry' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+  /api/time-entries/{id}:
+    parameters: [ { $ref: '#/components/parameters/Id' } ]
+    delete:
+      tags: [time-entries]
+      summary: Delete one of the caller's entries
+      responses:
+        '204': { description: Deleted }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/time-entries/current:
+    get:
+      tags: [time-entries]
+      summary: The caller's running timer
+      responses:
+        '200': { description: Running, content: { application/json: { schema: { $ref: '#/components/schemas/TimeEntry' } } } }
+        '204': { description: No timer running }
+  /api/time-entries/start:
+    post:
+      tags: [time-entries]
+      summary: Start a timer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [projectId]
+              properties:
+                projectId: { type: integer }
+                description: { type: string, maxLength: 500 }
+      responses:
+        '201': { description: Started, content: { application/json: { schema: { $ref: '#/components/schemas/TimeEntry' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/time-entries/stop:
+    post:
+      tags: [time-entries]
+      summary: Stop the running timer
+      responses:
+        '200': { description: Stopped, content: { application/json: { schema: { $ref: '#/components/schemas/TimeEntry' } } } }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/time-entries/summary:
+    get:
+      tags: [time-entries]
+      summary: Totals by project and by day; running timers count up to now
+      parameters:
+        - { name: from, in: query, required: true, schema: { type: string, format: date-time } }
+        - { name: to, in: query, required: true, schema: { type: string, format: date-time } }
+        - { name: tz, in: query, schema: { type: string, example: America/Argentina/Buenos_Aires, default: UTC } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Summary' } } } }
+        '400': { $ref: '#/components/responses/Error' }
 components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: integer, minimum: 1 } }
+  responses:
+    Error:
+      description: Error
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
   schemas:
-    TimeEntry:
+    Error:
       type: object
-      properties:
-        time_entry_id:
-          type: integer
-        from_time:
-          type: string
-          format: date-time
-        to_time:
-          type: string
-          format: date-time
-        project_id:
-          type: integer
-        user_id:
-          type: integer
-
+      properties: { error: { type: string } }
     User:
       type: object
       properties:
-        id:
-          type: integer
-        username:
-          type: string
-        email:
-          type: string
-        full_name:
-          type: string
-
-    Customer:
+        id: { type: integer }
+        username: { type: string }
+        email: { type: string }
+        fullName: { type: string }
+    AuthResponse:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-
+        token: { type: string }
+        user: { $ref: '#/components/schemas/User' }
+    Customer:
+      type: object
+      properties: { id: { type: integer }, name: { type: string } }
+    CustomerInput:
+      type: object
+      required: [name]
+      properties: { name: { type: string, maxLength: 120 } }
     Project:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        customer_id:
-          type: integer
+        id: { type: integer }
+        name: { type: string }
+        customerId: { type: integer }
+        customerName: { type: string }
+    ProjectInput:
+      type: object
+      required: [name, customerId]
+      properties:
+        name: { type: string, maxLength: 120 }
+        customerId: { type: integer }
+    TimeEntry:
+      type: object
+      properties:
+        id: { type: integer }
+        projectId: { type: integer }
+        projectName: { type: string }
+        description: { type: string, nullable: true }
+        from: { type: string, format: date-time }
+        to: { type: string, format: date-time, nullable: true, description: null while the timer is running }
+    Summary:
+      type: object
+      properties:
+        totalSeconds: { type: integer }
+        byProject:
+          type: array
+          items:
+            type: object
+            properties: { projectId: { type: integer }, projectName: { type: string }, seconds: { type: integer } }
+        byDay:
+          type: array
+          items:
+            type: object
+            properties: { date: { type: string, format: date }, seconds: { type: integer } }
