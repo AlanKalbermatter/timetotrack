@@ -104,8 +104,8 @@ Errors are always `{"error": "<message>"}` with 400/401/404/409/500. A 500 never
 
 - Java 11 → 21 (`maven.compiler.release`).
 - Configuration: env vars `HTTP_PORT` (gateway), `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET`, `APP_PROFILE`. `dbconfig.json` stays as the local default.
-- Jackson registers `JavaTimeModule`, writes ISO dates instead of timestamps, and uses camelCase JSON everywhere (`fullName`, not `full_name`).
-- One `HttpErrors` helper maps domain exceptions (`ValidationException`, `NotFoundException`, `ConflictException`) to status codes. Postgres unique-violation (`23505`) and FK-violation (`23503`) codes map to 409.
+- Models are records with explicit `toJson()` mapping (no reflection-based serialisation). JSON is camelCase everywhere (`fullName`, not `full_name`), and timestamps are ISO-8601 strings.
+- One `Http` helper maps domain exceptions (`ValidationException`, `NotFoundException`, `ConflictException`) to status codes. Postgres unique-violation (`23505`) and FK-violation (`23503`) codes map to 409.
 - `openapi.yaml` describes the full surface with `bearerAuth`.
 - The dead `MainVerticle` port constants and the obsolete `.idea/` files are removed from the repo.
 
@@ -115,9 +115,9 @@ Errors are always `{"error": "<message>"}` with 400/401/404/409/500. A 500 never
 - **Integration (Testcontainers `postgres:16`, schema from `schema.sql`):**
   - DAOs;
   - the full stack deployed on random ports and driven **through the gateway**: register → login → customer → project → start → current → stop → summary; missing or invalid token → 401; a spoofed `X-User-Id` is ignored; a second start → 409; deleting another user's entry → 404; the running entry is counted in summary.
-- The time-entry placeholder bug must be reproduced by a failing integration test before it is fixed.
+- The prototype's callback-based backend layer is replaced wholesale (Future-based DAOs and services). The time-entry placeholder bug is therefore covered by integration tests that run every time-entry query against real Postgres, not by a patch to the old DAO.
 - The existing broken tests are fixed or replaced.
-- Frontend: `tsc --noEmit` and `npm run build`. Component tests are out of scope.
+- Frontend: `tsc --noEmit`, unit tests for the pure time utilities (durations, week boundaries, datetime-local conversion), and `npm run build`. Component tests are out of scope.
 
 ## 7. Run and deliver
 
@@ -125,7 +125,7 @@ Errors are always `{"error": "<message>"}` with 400/401/404/409/500. A 500 never
 - The seed contains a demo user (`demo@timetotrack.dev` / `demo1234`, documented in the README), 2 customers, 3 projects, and entries spread over the last 7 days.
 - CI (`.github/workflows/ci.yml`) runs on push and PR, with two jobs:
   - `backend`: `mvn -B verify` on Temurin 21;
-  - `frontend`: `npm ci`, `tsc`, `npm run build` on Node 20.
+  - `frontend`: `npm ci`, `tsc`, `npm test`, `npm run build` on Node 20.
 - The root `README.md` covers:
   - what the app does, a screenshot, the CI badge;
   - a Mermaid topology diagram;
