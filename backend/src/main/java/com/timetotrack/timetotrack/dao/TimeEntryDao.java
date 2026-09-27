@@ -1,125 +1,91 @@
 package com.timetotrack.timetotrack.dao;
 
 import com.timetotrack.timetotrack.constant.TimeEntrySQL;
+import com.timetotrack.timetotrack.database.Rows;
+import com.timetotrack.timetotrack.model.Summary.DayTotal;
+import com.timetotrack.timetotrack.model.Summary.ProjectTotal;
 import com.timetotrack.timetotrack.model.TimeEntry;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
+import static com.timetotrack.timetotrack.database.Timestamps.fromDb;
+import static com.timetotrack.timetotrack.database.Timestamps.toDb;
+
+/** Every query is scoped by user id: one user can never read or change another's entries. */
 public class TimeEntryDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimeEntryDao.class);
-    private final Pool client;
+    private final Pool pool;
 
-    public TimeEntryDao(Pool client) {
-        this.client = client;
+    public TimeEntryDao(Pool pool) {
+        this.pool = pool;
     }
 
-    public void fetchAll(Handler<AsyncResult<List<TimeEntry>>> resultHandler) {
-        client.query(TimeEntrySQL.SELECT_ALL).execute(ar -> {
-            if (ar.succeeded()) {
-                List<TimeEntry> entries = new ArrayList<>();
-                for (Row row : ar.result()) {
-                    entries.add(mapRowToTimeEntry(row));
-                }
-                resultHandler.handle(Future.succeededFuture(entries));
-            } else {
-                resultHandler.handle(Future.failedFuture(ar.cause()));
-            }
-        });
+    public Future<List<TimeEntry>> findForUser(int userId, Instant from, Instant to, Instant now) {
+        return pool.preparedQuery(TimeEntrySQL.SELECT_FOR_USER_IN_RANGE)
+                .execute(Tuple.of(userId, toDb(from), toDb(to), toDb(now)))
+                .map(rows -> Rows.map(rows, TimeEntryDao::toEntry));
     }
 
-    public void fetchById(long id, Handler<AsyncResult<TimeEntry>> resultHandler) {
-        client.preparedQuery(TimeEntrySQL.SELECT_BY_ID)
-                .execute(Tuple.of(id), ar -> {
-                    if (ar.succeeded()) {
-                        TimeEntry timeEntry = mapRowToTimeEntry(ar.result().iterator().next());
-                        LOGGER.info("Fetched Time Entry by ID {}", id);
-                        resultHandler.handle(Future.succeededFuture(timeEntry));
-                    } else {
-                        LOGGER.warn("Time Entry with id {} not found", id, ar.cause());
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
-                    }
-                });
+    public Future<Optional<TimeEntry>> findByIdForUser(long id, int userId) {
+        return pool.preparedQuery(TimeEntrySQL.SELECT_BY_ID_FOR_USER)
+                .execute(Tuple.of(id, userId))
+                .map(rows -> Rows.first(rows).map(TimeEntryDao::toEntry));
     }
 
-    public void create(TimeEntry entry, Handler<AsyncResult<TimeEntry>> resultHandler) {
-        client.preparedQuery(TimeEntrySQL.INSERT_ONE)
-                .execute(Tuple.of(entry.getFromTime(), entry.getToTime(), entry.getProjectId(), entry.getUserId()), ar -> {
-                    if (ar.succeeded()) {
-                        Row row = ar.result().iterator().next();
-                        entry.setId(row.getLong("time_entry_id"));
-                        resultHandler.handle(Future.succeededFuture(entry));
-                    } else {
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
-                    }
-                });
+    public Future<Optional<TimeEntry>> findRunning(int userId) {
+        return pool.preparedQuery(TimeEntrySQL.SELECT_RUNNING_FOR_USER)
+                .execute(Tuple.of(userId))
+                .map(rows -> Rows.first(rows).map(TimeEntryDao::toEntry));
     }
 
-    public void update(TimeEntry entry, Handler<AsyncResult<TimeEntry>> resultHandler) {
-        client.preparedQuery(TimeEntrySQL.UPDATE_ONE)
-                .execute(Tuple.of(
-                        entry.getFromTime(),
-                        entry.getToTime(),
-                        entry.getProjectId(),
-                        entry.getUserId()), ar -> {
-                    if (ar.succeeded()) {
-                        LOGGER.info("Updated Time Entry by ID {}", entry.getId());
-                        resultHandler.handle(Future.succeededFuture(entry));
-                    } else {
-                        LOGGER.error("Time Entry with id {} not found", entry.getId(), ar.cause());
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
-                    }
-                });
+    /** @return the new entry id; {@code to == null} starts a running timer */
+    public Future<Long> insert(int userId, int projectId, String description, Instant from, Instant to) {
+        return pool.preparedQuery(TimeEntrySQL.INSERT_ONE)
+                .execute(Tuple.of(userId, projectId, description, toDb(from), toDb(to)))
+                .map(rows -> rows.iterator().next().getLong("time_entry_id"));
     }
 
-    public void delete(long id, Handler<AsyncResult<TimeEntry>> resultHandler) {
-        client.preparedQuery(TimeEntrySQL.DELETE_BY_ID)
-                .execute(Tuple.of(id), ar -> {
-                    if (ar.succeeded()) {
-                        LOGGER.info("Deleted Time Entry by ID {}", id);
-                        resultHandler.handle(
-                                Future.succeededFuture()
-                        );
-                    } else {
-                        LOGGER.error("Time Entry with id {} not found", id, ar.cause());
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
-                    }
-                });
+    /** @return the id of the entry that was stopped, or empty when no timer was running */
+    public Future<Optional<Long>> stopRunning(int userId, Instant now) {
+        return pool.preparedQuery(TimeEntrySQL.STOP_RUNNING_FOR_USER)
+                .execute(Tuple.of(userId, toDb(now)))
+                .map(rows -> Rows.first(rows).map(row -> row.getLong("time_entry_id")));
     }
 
-    public void fetchByUserId(int userId, Handler<AsyncResult<List<TimeEntry>>> resultHandler) {
-        client.preparedQuery(TimeEntrySQL.SELECT_BY_USER_ID)
-                .execute(Tuple.of(userId), ar -> {
-                    if (ar.succeeded()) {
-                        LOGGER.info("Fetched Time Entry by User ID {}", userId);
-                        List<TimeEntry> entries = new ArrayList<>();
-                        for (Row row : ar.result()) {
-                            entries.add(mapRowToTimeEntry(row));
-                        }
-                        resultHandler.handle(Future.succeededFuture(entries));
-                    } else {
-                        LOGGER.error("Time Entry with id {} not found", userId, ar.cause());
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
-                    }
-                });
+    /** @return whether a row owned by the user was deleted */
+    public Future<Boolean> deleteForUser(long id, int userId) {
+        return pool.preparedQuery(TimeEntrySQL.DELETE_FOR_USER)
+                .execute(Tuple.of(id, userId))
+                .map(rows -> rows.rowCount() > 0);
     }
 
-    private TimeEntry mapRowToTimeEntry(Row row) {
+    public Future<List<ProjectTotal>> summaryByProject(int userId, Instant from, Instant to, Instant now) {
+        return pool.preparedQuery(TimeEntrySQL.SUMMARY_BY_PROJECT)
+                .execute(Tuple.of(userId, toDb(from), toDb(to), toDb(now)))
+                .map(rows -> Rows.map(rows, row -> new ProjectTotal(
+                        row.getInteger("project_id"), row.getString("project_name"), row.getLong("seconds"))));
+    }
+
+    public Future<List<DayTotal>> summaryByDay(int userId, Instant from, Instant to, Instant now, String zoneId) {
+        return pool.preparedQuery(TimeEntrySQL.SUMMARY_BY_DAY)
+                .execute(Tuple.of(userId, toDb(from), toDb(to), toDb(now), zoneId))
+                .map(rows -> Rows.map(rows, row -> new DayTotal(row.getString("day"), row.getLong("seconds"))));
+    }
+
+    private static TimeEntry toEntry(Row row) {
         return new TimeEntry(
                 row.getLong("time_entry_id"),
-                row.getLocalDateTime("from_time"),
-                row.getLocalDateTime("to_time"),
+                row.getInteger("user_id"),
                 row.getInteger("project_id"),
-                row.getInteger("user_id")
-        );
+                row.getString("project_name"),
+                row.getString("description"),
+                fromDb(row.getOffsetDateTime("from_time")),
+                fromDb(row.getOffsetDateTime("to_time")));
     }
 }

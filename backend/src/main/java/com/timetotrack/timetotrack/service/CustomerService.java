@@ -1,37 +1,74 @@
 package com.timetotrack.timetotrack.service;
 
 import com.timetotrack.timetotrack.dao.CustomerDao;
+import com.timetotrack.timetotrack.error.ConflictException;
+import com.timetotrack.timetotrack.error.NotFoundException;
+import com.timetotrack.timetotrack.error.PgErrors;
+import com.timetotrack.timetotrack.error.ValidationException;
 import com.timetotrack.timetotrack.model.Customer;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
+import io.vertx.core.Future;
 
 import java.util.List;
 
+/**
+ * Validates customer names and translates constraint violations: duplicate name → 409,
+ * deleting a customer that still has projects → 409.
+ */
 public class CustomerService {
 
-    private final CustomerDao dao;
+    static final int MAX_NAME_LENGTH = 120;
 
-    public CustomerService(CustomerDao dao) {
-        this.dao = dao;
+    private final CustomerDao customers;
+
+    public CustomerService(CustomerDao customers) {
+        this.customers = customers;
     }
 
-    public void fetchAll(Handler<AsyncResult<List<Customer>>> handler) {
-        dao.fetchAll(handler);
+    public Future<List<Customer>> findAll() {
+        return customers.findAll();
     }
 
-    public void fetchById(int id, Handler<AsyncResult<Customer>> handler) {
-        dao.fetchById(id, handler);
+    public Future<Customer> findById(int id) {
+        return customers.findById(id).compose(found -> NotFoundException.require(found, notFound(id)));
     }
 
-    public void create(Customer customer, Handler<AsyncResult<Customer>> handler) {
-        dao.create(customer, handler);
+    public Future<Customer> create(String name) {
+        return validName(name).compose(valid -> customers.create(valid)
+                .recover(PgErrors.translate(PgErrors.UNIQUE_VIOLATION, () -> duplicate(valid))));
     }
 
-    public void update(Customer customer, Handler<AsyncResult<Customer>> handler) {
-        dao.update(customer, handler);
+    public Future<Customer> update(int id, String name) {
+        return validName(name).compose(valid -> customers.update(id, valid)
+                .recover(PgErrors.translate(PgErrors.UNIQUE_VIOLATION, () -> duplicate(valid)))
+                .compose(updated -> updated
+                        ? Future.succeededFuture(new Customer(id, valid))
+                        : Future.failedFuture(new NotFoundException(notFound(id)))));
     }
 
-    public void delete(int id, Handler<AsyncResult<Void>> handler) {
-        dao.delete(id, handler);
+    public Future<Void> delete(int id) {
+        return customers.delete(id)
+                .recover(PgErrors.translate(PgErrors.FOREIGN_KEY_VIOLATION,
+                        () -> new ConflictException("Customer " + id + " still has projects")))
+                .compose(deleted -> deleted
+                        ? Future.<Void>succeededFuture()
+                        : Future.failedFuture(new NotFoundException(notFound(id))));
+    }
+
+    private static Future<String> validName(String name) {
+        if (name == null) {
+            return Future.failedFuture(new ValidationException("name is required"));
+        }
+        if (name.length() > MAX_NAME_LENGTH) {
+            return Future.failedFuture(new ValidationException("name must be at most " + MAX_NAME_LENGTH + " characters"));
+        }
+        return Future.succeededFuture(name);
+    }
+
+    private static ConflictException duplicate(String name) {
+        return new ConflictException("A customer named '" + name + "' already exists");
+    }
+
+    private static String notFound(int id) {
+        return "Customer " + id + " not found";
     }
 }

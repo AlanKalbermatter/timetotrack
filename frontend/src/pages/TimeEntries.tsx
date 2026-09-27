@@ -1,78 +1,101 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { errorMessage } from "../api/client";
+import { listProjects } from "../api/projects";
+import { createTimeEntry, deleteTimeEntry, listTimeEntries } from "../api/timeEntries";
+import ConfirmButton from "../components/ConfirmButton";
 import NewTimeEntryModal from "../components/modals/NewTimeEntryModal";
+import PageCard from "../components/PageCard";
+import { AsyncContent, ErrorMessage } from "../components/states";
+import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from "../components/ui";
+import { useAsync } from "../hooks/useAsync";
+import { formatDateTime, formatDuration, secondsBetween } from "../utils/time";
 
+/** The signed-in user's entries from the last 30 days, with manual entry and delete. */
 const TimeEntries = () => {
+    const entries = useAsync(() => listTimeEntries());
+    const projects = useAsync(listProjects);
     const [showModal, setShowModal] = useState(false);
+    const [actionError, setActionError] = useState<string | null>(null);
+    const hasProjects = (projects.data?.length ?? 0) > 0;
 
-    const entries = [
-        {
-            id: 1,
-            user: "Alan Kalbermatter",
-            project: "Frontend Redesign",
-            from: "2025-05-12 09:00",
-            to: "2025-05-12 12:00",
-            duration: "3h",
-        },
-        {
-            id: 2,
-            user: "Laura Fernández",
-            project: "API Integration",
-            from: "2025-05-12 13:30",
-            to: "2025-05-12 16:00",
-            duration: "2h 30m",
-        },
-    ];
-
-    const handleSave = (data: any) => {
-        console.log("New Time Entry:", data);
+    const remove = async (id: number) => {
+        setActionError(null);
+        try {
+            await deleteTimeEntry(id);
+            entries.reload();
+        } catch (err) {
+            setActionError(errorMessage(err));
+        }
     };
 
     return (
-        <>
-            <div className="bg-white dark:bg-[#1E1E2F] shadow rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Time Entries</h2>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full table-auto text-sm text-left">
-                        <thead className="bg-gray-100 dark:bg-[#2F2F40] text-gray-600 dark:text-gray-300">
-                        <tr>
-                            <th className="px-4 py-2">User</th>
-                            <th className="px-4 py-2">Project</th>
-                            <th className="px-4 py-2">From</th>
-                            <th className="px-4 py-2">To</th>
-                            <th className="px-4 py-2">Duration</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {entries.map((entry) => (
-                            <tr key={entry.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#2F2F40]">
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{entry.user}</td>
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{entry.project}</td>
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{entry.from}</td>
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{entry.to}</td>
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{entry.duration}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div className="flex justify-end mt-6">
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded shadow"
-                >
+        <PageCard
+            title="Time entries"
+            action={
+                <button type="button" onClick={() => setShowModal(true)} disabled={!hasProjects}
+                        title={hasProjects ? undefined : "Create a project first"} className={primaryButtonClass}>
                     + New Time Entry
                 </button>
-            </div>
-
-            {showModal && (
+            }
+        >
+            {actionError && (
+                <div className="mb-4">
+                    <ErrorMessage message={actionError} />
+                </div>
+            )}
+            <AsyncContent state={entries} isEmpty={(list) => list.length === 0}
+                          emptyMessage="No time entries in the last 30 days. Start a timer on the dashboard or add one manually.">
+                {(list) => (
+                    <div className="overflow-x-auto">
+                        <table className={tableClass}>
+                            <thead className={theadClass}>
+                                <tr>
+                                    <th className={cellClass}>Project</th>
+                                    <th className={cellClass}>Description</th>
+                                    <th className={cellClass}>Start</th>
+                                    <th className={cellClass}>End</th>
+                                    <th className={cellClass}>Duration</th>
+                                    <th className={`${cellClass} text-right`}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {list.map((entry) => (
+                                    <tr key={entry.id} className={rowClass}>
+                                        <td className={cellClass}>{entry.projectName}</td>
+                                        <td className={cellClass}>{entry.description ?? "—"}</td>
+                                        <td className={`${cellClass} whitespace-nowrap`}>{formatDateTime(entry.from)}</td>
+                                        <td className={`${cellClass} whitespace-nowrap`}>
+                                            {entry.to ? (
+                                                formatDateTime(entry.to)
+                                            ) : (
+                                                <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                                                    Running
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className={cellClass}>{entry.to ? formatDuration(secondsBetween(entry.from, entry.to)) : "—"}</td>
+                                        <td className={`${cellClass} text-right`}>
+                                            <ConfirmButton onConfirm={() => remove(entry.id)} />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </AsyncContent>
+            <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">Showing your entries from the last 30 days.</p>
+            {showModal && projects.data && (
                 <NewTimeEntryModal
+                    projects={projects.data}
                     onClose={() => setShowModal(false)}
-                    onSave={handleSave}
+                    onSave={async (input) => {
+                        await createTimeEntry(input);
+                        entries.reload();
+                    }}
                 />
             )}
-        </>
+        </PageCard>
     );
 };
 

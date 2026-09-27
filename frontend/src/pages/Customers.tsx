@@ -1,61 +1,78 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { errorMessage } from "../api/client";
+import { createCustomer, deleteCustomer, listCustomers } from "../api/customers";
+import ConfirmButton from "../components/ConfirmButton";
 import NewCustomerModal from "../components/modals/NewCustomerModal";
+import PageCard from "../components/PageCard";
+import { AsyncContent, ErrorMessage } from "../components/states";
+import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from "../components/ui";
+import { useAsync } from "../hooks/useAsync";
 
+/** Customers list with create and delete (deleting a customer that has projects is rejected by the API). */
 const Customers = () => {
+    const customers = useAsync(listCustomers);
     const [showModal, setShowModal] = useState(false);
+    const [actionError, setActionError] = useState<string | null>(null);
 
-    const customers = [
-        { id: 1, name: "Acme Inc.", email: "contact@acme.com" },
-        { id: 2, name: "Beta LLC", email: "info@beta.com" },
-    ];
-
-    const handleSave = (data: any) => {
-        console.log("New customer added:", data);
+    const remove = async (id: number) => {
+        setActionError(null);
+        try {
+            await deleteCustomer(id);
+            customers.reload();
+        } catch (err) {
+            setActionError(errorMessage(err));
+        }
     };
 
     return (
-        <>
-            <div className="bg-white dark:bg-[#1E1E2F] text-gray-800 dark:text-gray-100 shadow rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4">Customers</h2>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full table-auto text-sm text-left">
-                        <thead className="bg-gray-100 dark:bg-[#2A2A3F] text-gray-600 dark:text-gray-300">
-                        <tr>
-                            <th className="px-4 py-2">Name</th>
-                            <th className="px-4 py-2">Email</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {customers.map((customer) => (
-                            <tr
-                                key={customer.id}
-                                className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#2A2A3F]"
-                            >
-                                <td className="px-4 py-2">{customer.name}</td>
-                                <td className="px-4 py-2">{customer.email}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div className="flex justify-end mt-4">
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded shadow"
-                >
+        <PageCard
+            title="Customers"
+            action={
+                <button type="button" onClick={() => setShowModal(true)} className={primaryButtonClass}>
                     + New Customer
                 </button>
-            </div>
-
+            }
+        >
+            {actionError && (
+                <div className="mb-4">
+                    <ErrorMessage message={actionError} />
+                </div>
+            )}
+            <AsyncContent state={customers} isEmpty={(list) => list.length === 0}
+                          emptyMessage="No customers yet. Add one to start creating projects.">
+                {(list) => (
+                    <div className="overflow-x-auto">
+                        <table className={tableClass}>
+                            <thead className={theadClass}>
+                                <tr>
+                                    <th className={cellClass}>Name</th>
+                                    <th className={`${cellClass} text-right`}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {list.map((customer) => (
+                                    <tr key={customer.id} className={rowClass}>
+                                        <td className={cellClass}>{customer.name}</td>
+                                        <td className={`${cellClass} text-right`}>
+                                            <ConfirmButton onConfirm={() => remove(customer.id)} />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </AsyncContent>
             {showModal && (
                 <NewCustomerModal
                     onClose={() => setShowModal(false)}
-                    onSave={handleSave}
+                    onSave={async (name) => {
+                        await createCustomer(name);
+                        customers.reload();
+                    }}
                 />
             )}
-        </>
+        </PageCard>
     );
 };
 

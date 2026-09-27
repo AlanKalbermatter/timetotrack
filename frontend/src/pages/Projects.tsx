@@ -1,61 +1,85 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { errorMessage } from "../api/client";
+import { listCustomers } from "../api/customers";
+import { createProject, deleteProject, listProjects } from "../api/projects";
+import ConfirmButton from "../components/ConfirmButton";
 import NewProjectModal from "../components/modals/NewProjectModal";
+import PageCard from "../components/PageCard";
+import { AsyncContent, ErrorMessage } from "../components/states";
+import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from "../components/ui";
+import { useAsync } from "../hooks/useAsync";
 
+/** Projects list with create and delete. Creating needs at least one customer. */
 const Projects = () => {
+    const projects = useAsync(listProjects);
+    const customers = useAsync(listCustomers);
     const [showModal, setShowModal] = useState(false);
+    const [actionError, setActionError] = useState<string | null>(null);
+    const hasCustomers = (customers.data?.length ?? 0) > 0;
 
-    const projects = [
-        { id: 1, name: "Website Redesign", customer: "Acme Inc." },
-        { id: 2, name: "Mobile App", customer: "Beta LLC" },
-    ];
-
-    const handleSave = (data: any) => {
-        console.log("New project created:", data);
+    const remove = async (id: number) => {
+        setActionError(null);
+        try {
+            await deleteProject(id);
+            projects.reload();
+        } catch (err) {
+            setActionError(errorMessage(err));
+        }
     };
 
     return (
-        <>
-            {/* Card con la tabla */}
-            <div className="bg-white dark:bg-[#1E1E2F] shadow rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Projects</h2>
-
-                <div className="overflow-x-auto">
-                    <table className="min-w-full table-auto text-sm text-left">
-                        <thead className="bg-gray-100 dark:bg-[#2F2F40] text-gray-600 dark:text-gray-300">
-                        <tr>
-                            <th className="px-4 py-2">Project Name</th>
-                            <th className="px-4 py-2">Customer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {projects.map((project) => (
-                            <tr key={project.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#2F2F40]">
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{project.name}</td>
-                                <td className="px-4 py-2 text-gray-800 dark:text-gray-100">{project.customer}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* Botón fuera del card */}
-            <div className="flex justify-end mt-4">
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded shadow"
-                >
+        <PageCard
+            title="Projects"
+            action={
+                <button type="button" onClick={() => setShowModal(true)} disabled={!hasCustomers}
+                        title={hasCustomers ? undefined : "Create a customer first"} className={primaryButtonClass}>
                     + New Project
                 </button>
-            </div>
-
-            {showModal && (
+            }
+        >
+            {actionError && (
+                <div className="mb-4">
+                    <ErrorMessage message={actionError} />
+                </div>
+            )}
+            <AsyncContent state={projects} isEmpty={(list) => list.length === 0}
+                          emptyMessage={hasCustomers ? "No projects yet." : "Create a customer first, then add its projects here."}>
+                {(list) => (
+                    <div className="overflow-x-auto">
+                        <table className={tableClass}>
+                            <thead className={theadClass}>
+                                <tr>
+                                    <th className={cellClass}>Project</th>
+                                    <th className={cellClass}>Customer</th>
+                                    <th className={`${cellClass} text-right`}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {list.map((project) => (
+                                    <tr key={project.id} className={rowClass}>
+                                        <td className={cellClass}>{project.name}</td>
+                                        <td className={cellClass}>{project.customerName}</td>
+                                        <td className={`${cellClass} text-right`}>
+                                            <ConfirmButton onConfirm={() => remove(project.id)} />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </AsyncContent>
+            {showModal && customers.data && (
                 <NewProjectModal
+                    customers={customers.data}
                     onClose={() => setShowModal(false)}
-                    onSave={handleSave}
+                    onSave={async (name, customerId) => {
+                        await createProject(name, customerId);
+                        projects.reload();
+                    }}
                 />
             )}
-        </>
+        </PageCard>
     );
 };
 

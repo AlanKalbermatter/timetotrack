@@ -13,6 +13,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.4",
+    "axios": "^1.20.0",
     "babel-plugin-react-css-modules": "^5.2.6",
     "chart.js": "^4.4.9",
     "classnames": "^2.5.1",
@@ -29,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "typecheck": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [
@@ -53,8 +55,8 @@
     "@tailwindcss/postcss": "^4.1.6",
     "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.21",
-    "axios": "^1.9.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.1"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

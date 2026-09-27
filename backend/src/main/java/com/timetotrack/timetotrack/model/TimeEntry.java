@@ -1,62 +1,19 @@
 package com.timetotrack.timetotrack.model;
 
-import java.time.LocalDateTime;
+import io.vertx.core.json.JsonObject;
 
-public class TimeEntry {
-    private Long id;
-    private LocalDateTime fromTime;
-    private LocalDateTime toTime;
-    private Integer projectId;
-    private Integer userId;
+import java.time.Instant;
 
-    public TimeEntry() {
-    }
+/** A block of tracked time. {@code to == null} means the timer is still running. */
+public record TimeEntry(Long id, int userId, int projectId, String projectName, String description, Instant from, Instant to) {
 
-    public TimeEntry(Long id, LocalDateTime fromTime, LocalDateTime toTime, Integer projectId, Integer userId) {
-        this.id = id;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
-        this.projectId = projectId;
-        this.userId = userId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getFromTime() {
-        return fromTime;
-    }
-
-    public void setFromTime(LocalDateTime fromTime) {
-        this.fromTime = fromTime;
-    }
-
-    public LocalDateTime getToTime() {
-        return toTime;
-    }
-
-    public void setToTime(LocalDateTime toTime) {
-        this.toTime = toTime;
-    }
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public JsonObject toJson() {
+        return new JsonObject()
+                .put("id", id)
+                .put("projectId", projectId)
+                .put("projectName", projectName)
+                .put("description", description)
+                .put("from", from.toString())
+                .put("to", to == null ? null : to.toString());
     }
 }

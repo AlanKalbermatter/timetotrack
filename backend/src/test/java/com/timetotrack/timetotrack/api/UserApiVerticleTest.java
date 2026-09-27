@@ -1,59 +1,68 @@
 package com.timetotrack.timetotrack.api;
 
-import com.timetotrack.timetotrack.model.User;
+import com.timetotrack.timetotrack.dao.UserDao;
 import com.timetotrack.timetotrack.service.UserService;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import com.timetotrack.timetotrack.support.IntegrationTest;
+import com.timetotrack.timetotrack.support.Ports;
+import com.timetotrack.timetotrack.support.TestHttp;
+import com.timetotrack.timetotrack.support.TestHttp.Response;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.junit5.VertxExtension;
-import io.vertx.junit5.VertxTestContext;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.mockito.Mockito.*;
+import java.util.List;
 
-@ExtendWith(VertxExtension.class)
-public class UserApiVerticleTest {
+import static com.timetotrack.timetotrack.support.Await.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-    private UserService userService;
+class UserApiVerticleTest extends IntegrationTest {
 
-    @BeforeEach
-    void setUp(Vertx vertx, VertxTestContext testContext) {
-        userService = mock(UserService.class);
+    private static TestHttp http;
 
-        vertx.deployVerticle(new UserApiVerticle(userService, 8888), testContext.succeeding(id -> testContext.completeNow()));
+    @BeforeAll
+    static void deploy() {
+        int port = Ports.free();
+        await(vertx.deployVerticle(new UserApiVerticle(new UserService(new UserDao(pool)), port)));
+        http = new TestHttp(port);
     }
 
     @Test
-    void testCreateUser(Vertx vertx, VertxTestContext testContext) {
-        WebClient client = WebClient.create(vertx);
+    void listsTeamOrderedByFullNameWithoutSecrets() {
+        int zoe = fixtures.user("zoe");
+        fixtures.user("ana");
 
-        JsonObject payload = new JsonObject()
-                .put("username", "lucas")
-                .put("email", "lucas@test.com")
-                .put("full_name", "Lucas Ramirez");
+        Response response = http.asUser(zoe).get("/api/users");
 
-        User user = new User(1, "lucas", "lucas@test.com", "Lucas Ramirez");
+        assertEquals(200, response.status());
+        List<String> usernames = response.jsonArray().stream()
+                .map(user -> ((JsonObject) user).getString("username"))
+                .toList();
+        assertEquals(List.of("ana", "zoe"), usernames);
+        assertFalse(response.body().contains("password"));
+    }
 
-        doAnswer(invocation -> {
-            Handler<AsyncResult<User>> handler = invocation.getArgument(1);
-            handler.handle(Future.succeededFuture(user));
-            return null;
-        }).when(userService).createUser(any(User.class), any());
+    @Test
+    void meReturnsTheCallersProfile() {
+        int ana = fixtures.user("ana");
 
-        client.post(8888, "localhost", "/api/users")
-                .sendJsonObject(payload)
-                .onComplete(ar -> {
-                    if (ar.succeeded()) {
-                        assert (ar.result().statusCode() == 201);
-                        testContext.completeNow();
-                    } else {
-                        testContext.failNow(ar.cause());
-                    }
-                });
+        Response response = http.asUser(ana).get("/api/users/me");
+
+        assertEquals(200, response.status());
+        assertEquals(new JsonObject()
+                .put("id", ana)
+                .put("username", "ana")
+                .put("email", "ana@example.com")
+                .put("fullName", "ana"), response.json());
+    }
+
+    @Test
+    void meForAnUnknownUserIs404() {
+        assertEquals(404, http.asUser(999).get("/api/users/me").status());
+    }
+
+    @Test
+    void requiresTheGatewayUserHeader() {
+        assertEquals(401, http.get("/api/users").status());
     }
 }

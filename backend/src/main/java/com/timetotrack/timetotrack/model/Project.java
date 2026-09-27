@@ -1,40 +1,17 @@
 package com.timetotrack.timetotrack.model;
 
-public class Project {
-    private Integer id;
-    private String name;
-    private Integer customerId;
+import io.vertx.core.json.JsonObject;
 
-    public Project() {
-    }
+/**
+ * A project belonging to one customer. {@code customerName} is denormalised for display.
+ */
+public record Project(Integer id, String name, Integer customerId, String customerName) {
 
-    public Project(Integer id, String name, Integer customerId) {
-        this.id = id;
-        this.name = name;
-        this.customerId = customerId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public JsonObject toJson() {
+        return new JsonObject()
+                .put("id", id)
+                .put("name", name)
+                .put("customerId", customerId)
+                .put("customerName", customerName);
     }
 }

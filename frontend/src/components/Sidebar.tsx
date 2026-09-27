@@ -17,6 +17,7 @@ const FaProjectDiagram = FaProjectDiagramIcon as unknown as React.FC<{ size?: nu
 const FaUsers = FaUsersIcon as unknown as React.FC<{ size?: number }>;
 const FaUserTie = FaUserTieIcon as unknown as React.FC<{ size?: number }>;
 
+/** Collapsible navigation between the app's pages. */
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
 

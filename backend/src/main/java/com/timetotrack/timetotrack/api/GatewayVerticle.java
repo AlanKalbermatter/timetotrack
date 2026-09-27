@@ -1,78 +1,137 @@
 package com.timetotrack.timetotrack.api;
 
+import com.timetotrack.timetotrack.auth.TokenService;
+import com.timetotrack.timetotrack.config.ServicePorts;
+import com.timetotrack.timetotrack.error.NotFoundException;
+import com.timetotrack.timetotrack.error.UnauthorizedException;
+import com.timetotrack.timetotrack.http.Http;
+import com.timetotrack.timetotrack.http.ServiceVerticle;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
-import io.vertx.core.MultiMap;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
+import io.vertx.ext.web.handler.BodyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The only public listener. Matches the path prefix to an internal service, authenticates the
+ * bearer token for non-public routes, and proxies the request with X-User-Id set from the token.
+ * Only an allow-list of request headers is forwarded, so a client-supplied X-User-Id never reaches a service.
+ */
 public class GatewayVerticle extends AbstractVerticle {
 
+    record Route(String prefix, int targetPort, boolean isPublic) {
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(GatewayVerticle.class);
+    private static final List<String> FORWARDED_REQUEST_HEADERS = List.of("Content-Type", "Accept");
+    private static final String BEARER = "Bearer ";
+    private static final long MAX_BODY_BYTES = 64 * 1024;
+
+    private final int port;
+    private final List<Route> routes;
+    private final TokenService tokens;
+    private WebClient client;
+
+    public GatewayVerticle(int port, ServicePorts ports, TokenService tokens) {
+        this.port = port;
+        this.tokens = tokens;
+        this.routes = List.of(
+                new Route("/api/auth", ports.auth(), true),
+                new Route("/api/docs", ports.docs(), true),
+                new Route("/api/users", ports.users(), false),
+                new Route("/api/customers", ports.customers(), false),
+                new Route("/api/projects", ports.projects(), false),
+                new Route("/api/time-entries", ports.timeEntries(), false));
+    }
+
+    Optional<Route> routeFor(String path) {
+        return routes.stream()
+                .filter(route -> path.equals(route.prefix()) || path.startsWith(route.prefix() + "/"))
+                .max(Comparator.comparingInt(route -> route.prefix().length()));
+    }
 
     @Override
     public void start(Promise<Void> startPromise) {
+        client = WebClient.create(vertx, new WebClientOptions().setFollowRedirects(false));
         Router router = Router.router(vertx);
-        WebClient client = WebClient.create(vertx);
-
-        router.route().handler(BodyHandler.create());
-
-        proxy(router, client, "/api/users/*", 8888);
-        proxy(router, client, "/api/customers/*", 8889);
-        proxy(router, client, "/api/projects/*", 8890);
-        proxy(router, client, "/api/time-entries/*", 8891);
+        // JSON-only API: never let BodyHandler write multipart file parts to disk.
+        router.route().handler(BodyHandler.create(false).setBodyLimit(MAX_BODY_BYTES));
+        router.route().handler(this::dispatch);
 
         vertx.createHttpServer()
                 .requestHandler(router)
-                .listen(3000, http -> {
-                    if (http.succeeded()) {
-                        LOGGER.info("API Gateway running on http://localhost:3014");
-                        startPromise.complete();
-                    } else {
-                        LOGGER.error("API Gateway running failed", http.cause());
-                        startPromise.fail(http.cause());
-                    }
-                });
+                .listen(port, "0.0.0.0")
+                .onSuccess(server -> {
+                    LOGGER.info("Gateway listening on 0.0.0.0:{}", server.actualPort());
+                    startPromise.complete();
+                })
+                .onFailure(startPromise::fail);
     }
 
-    private void proxy(Router router, WebClient client, String path, int targetPort) {
-        router.route(path).handler(ctx -> {
-            String targetPath = ctx.request().uri();
+    private void dispatch(RoutingContext ctx) {
+        Optional<Route> match = routeFor(ctx.request().path());
+        if (match.isEmpty()) {
+            Http.error(ctx, new NotFoundException("No route for " + ctx.request().path()));
+            return;
+        }
+        Route route = match.get();
+        if (route.isPublic()) {
+            forward(ctx, route, null);
+            return;
+        }
+        String authorization = ctx.request().getHeader("Authorization");
+        if (authorization == null || !authorization.startsWith(BEARER)) {
+            Http.error(ctx, new UnauthorizedException("Missing bearer token"));
+            return;
+        }
+        tokens.verify(authorization.substring(BEARER.length()).trim())
+                .onSuccess(userId -> forward(ctx, route, userId))
+                .onFailure(failure -> Http.error(ctx, failure));
+    }
 
-            ctx.request().body().onComplete(bodyResult -> {
-                if (bodyResult.failed()) {
-                    LOGGER.error(bodyResult.cause().getMessage(), bodyResult.cause());
-                    ctx.response().setStatusCode(400).end("Failed to read request body");
-                    return;
-                }
-
-                Buffer body = bodyResult.result();
-
-                client.requestAbs(ctx.request().method(), "http://localhost:" + targetPort + targetPath)
-                        .putHeaders(ctx.request().headers())
-                        .sendBuffer(body, ar -> {
-                            if (ar.succeeded()) {
-                                LOGGER.info("HTTP response sent to {}", targetPath);
-                                HttpResponse<Buffer> response = ar.result();
-
-                                ctx.response().setStatusCode(response.statusCode());
-
-                                MultiMap headers = response.headers();
-                                headers.forEach(header -> ctx.response().putHeader(header.getKey(), header.getValue()));
-
-                                ctx.response().end(response.body());
-                            } else {
-                                LOGGER.error(ar.cause().getMessage(), ar.cause());
-                                ar.cause().printStackTrace();
-                                ctx.response().setStatusCode(502).end("Gateway error");
-                            }
-                        });
-            });
+    private void forward(RoutingContext ctx, Route route, Integer userId) {
+        HttpRequest<Buffer> upstream = client.request(
+                ctx.request().method(), route.targetPort(), ServiceVerticle.INTERNAL_HOST, ctx.request().uri());
+        for (String header : FORWARDED_REQUEST_HEADERS) {
+            String value = ctx.request().getHeader(header);
+            if (value != null) {
+                upstream.putHeader(header, value);
+            }
+        }
+        if (userId != null) {
+            upstream.putHeader(Http.USER_ID_HEADER, String.valueOf(userId));
+        }
+        Buffer body = ctx.body().buffer();
+        Future<HttpResponse<Buffer>> response = body == null || body.length() == 0
+                ? upstream.send()
+                : upstream.sendBuffer(body);
+        response.onSuccess(result -> {
+            ctx.response().setStatusCode(result.statusCode());
+            String contentType = result.getHeader("Content-Type");
+            if (contentType != null) {
+                ctx.response().putHeader("Content-Type", contentType);
+            }
+            Buffer payload = result.body();
+            if (payload == null) {
+                ctx.response().end();
+            } else {
+                ctx.response().end(payload);
+            }
+        }).onFailure(failure -> {
+            LOGGER.error("Upstream {} failed for {} {}", route.prefix(), ctx.request().method(), ctx.request().path(), failure);
+            Http.send(ctx, 502, Http.errorBody("Upstream service unavailable"));
         });
     }
 }

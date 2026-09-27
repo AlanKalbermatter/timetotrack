@@ -1,6 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
+/** App shell for signed-in pages: sidebar, header and scrollable content. */
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-[#12121A] transition-colors duration-300">

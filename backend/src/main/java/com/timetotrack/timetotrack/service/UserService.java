@@ -1,38 +1,28 @@
 package com.timetotrack.timetotrack.service;
 
 import com.timetotrack.timetotrack.dao.UserDao;
+import com.timetotrack.timetotrack.error.NotFoundException;
 import com.timetotrack.timetotrack.model.User;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
+import io.vertx.core.Future;
 
 import java.util.List;
 
+/**
+ * Read-only access to team members; accounts are created through {@code AuthService}.
+ */
 public class UserService {
 
-    private final UserDao dao;
+    private final UserDao users;
 
-    public UserService(UserDao dao) {
-        this.dao = dao;
+    public UserService(UserDao users) {
+        this.users = users;
     }
 
-    public void getAllUsers(Handler<AsyncResult<List<User>>> resultHandler) {
-        dao.fetchAll(resultHandler);
+    public Future<List<User>> findAll() {
+        return users.findAll();
     }
 
-    public void createUser(User user, Handler<AsyncResult<User>> resultHandler) {
-        dao.createUser(user, resultHandler);
+    public Future<User> findById(int id) {
+        return users.findById(id).compose(found -> NotFoundException.require(found, "User " + id + " not found"));
     }
-
-    public void getUserById(long id, Handler<AsyncResult<User>> resultHandler) {
-        dao.fetchById(id, resultHandler);
-    }
-
-    public void updateUser(User user, Handler<AsyncResult<User>> resultHandler) {
-        dao.updateUser(user, resultHandler);
-    }
-
-    public void deleteUser(long id, Handler<AsyncResult<Void>> resultHandler) {
-        dao.deleteUser(id, resultHandler);
-    }
-
 }
