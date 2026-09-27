@@ -2,6 +2,8 @@ package com.timetotrack.timetotrack.dao;
 
 import com.timetotrack.timetotrack.constant.TimeEntrySQL;
 import com.timetotrack.timetotrack.database.Rows;
+import com.timetotrack.timetotrack.model.Summary.DayTotal;
+import com.timetotrack.timetotrack.model.Summary.ProjectTotal;
 import com.timetotrack.timetotrack.model.TimeEntry;
 import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
@@ -61,6 +63,19 @@ public class TimeEntryDao {
         return pool.preparedQuery(TimeEntrySQL.DELETE_FOR_USER)
                 .execute(Tuple.of(id, userId))
                 .map(rows -> rows.rowCount() > 0);
+    }
+
+    public Future<List<ProjectTotal>> summaryByProject(int userId, Instant from, Instant to, Instant now) {
+        return pool.preparedQuery(TimeEntrySQL.SUMMARY_BY_PROJECT)
+                .execute(Tuple.of(userId, toDb(from), toDb(to), toDb(now)))
+                .map(rows -> Rows.map(rows, row -> new ProjectTotal(
+                        row.getInteger("project_id"), row.getString("project_name"), row.getLong("seconds"))));
+    }
+
+    public Future<List<DayTotal>> summaryByDay(int userId, Instant from, Instant to, Instant now, String zoneId) {
+        return pool.preparedQuery(TimeEntrySQL.SUMMARY_BY_DAY)
+                .execute(Tuple.of(userId, toDb(from), toDb(to), toDb(now), zoneId))
+                .map(rows -> Rows.map(rows, row -> new DayTotal(row.getString("day"), row.getLong("seconds"))));
     }
 
     private static TimeEntry toEntry(Row row) {

@@ -21,6 +21,26 @@ public final class TimeEntrySQL {
                     + "WHERE user_id = $1 AND to_time IS NULL RETURNING time_entry_id";
     public static final String DELETE_FOR_USER = "DELETE FROM time_entry WHERE time_entry_id = $1 AND user_id = $2";
 
+    /** Seconds of the entry inside [$2, $3), running entries ending at $4. Shared by both summary queries. */
+    private static final String CLIPPED_SECONDS =
+            "CAST(SUM(EXTRACT(EPOCH FROM LEAST(COALESCE(te.to_time, $4), $3) - GREATEST(te.from_time, $2))) AS BIGINT)";
+    private static final String OVERLAPS_RANGE =
+            "te.user_id = $1 AND te.from_time < $3 AND COALESCE(te.to_time, $4) > $2";
+
+    /** $1 user, $2 start, $3 end, $4 now. */
+    public static final String SUMMARY_BY_PROJECT =
+            "SELECT p.project_id, p.project_name, " + CLIPPED_SECONDS + " AS seconds "
+                    + "FROM time_entry te JOIN projects p ON p.project_id = te.project_id "
+                    + "WHERE " + OVERLAPS_RANGE + " "
+                    + "GROUP BY p.project_id, p.project_name ORDER BY seconds DESC, p.project_name";
+
+    /** $1 user, $2 start, $3 end, $4 now, $5 IANA time zone. */
+    public static final String SUMMARY_BY_DAY =
+            "SELECT to_char(GREATEST(te.from_time, $2) AT TIME ZONE $5, 'YYYY-MM-DD') AS day, " + CLIPPED_SECONDS + " AS seconds "
+                    + "FROM time_entry te "
+                    + "WHERE " + OVERLAPS_RANGE + " "
+                    + "GROUP BY day ORDER BY day";
+
     private TimeEntrySQL() {
     }
 }

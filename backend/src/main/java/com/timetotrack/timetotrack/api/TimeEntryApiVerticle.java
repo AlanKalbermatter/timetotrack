@@ -3,6 +3,7 @@ package com.timetotrack.timetotrack.api;
 import com.timetotrack.timetotrack.http.Http;
 import com.timetotrack.timetotrack.http.JsonFields;
 import com.timetotrack.timetotrack.http.ServiceVerticle;
+import com.timetotrack.timetotrack.model.Summary;
 import com.timetotrack.timetotrack.model.TimeEntry;
 import com.timetotrack.timetotrack.service.TimeEntryService;
 import io.vertx.core.json.JsonObject;
@@ -41,6 +42,11 @@ public class TimeEntryApiVerticle extends ServiceVerticle {
         }));
         router.post("/api/time-entries/stop").handler(ctx -> Http.respond(ctx, 200,
                 () -> entries.stop(Http.userId(ctx)).map(TimeEntry::toJson)));
+        router.get("/api/time-entries/summary").handler(ctx -> Http.respond(ctx, 200,
+                () -> entries.summary(Http.userId(ctx),
+                        Http.queryInstant(ctx, "from"),
+                        Http.queryInstant(ctx, "to"),
+                        Http.queryParam(ctx, "tz")).map(Summary::toJson)));
         router.delete("/api/time-entries/:id").handler(ctx -> Http.respond(ctx, 204,
                 () -> entries.delete(Http.userId(ctx), Http.pathId(ctx, "id"))));
     }

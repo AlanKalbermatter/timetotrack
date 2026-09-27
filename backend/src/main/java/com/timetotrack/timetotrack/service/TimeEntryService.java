@@ -5,12 +5,18 @@ import com.timetotrack.timetotrack.error.ConflictException;
 import com.timetotrack.timetotrack.error.NotFoundException;
 import com.timetotrack.timetotrack.error.PgErrors;
 import com.timetotrack.timetotrack.error.ValidationException;
+import com.timetotrack.timetotrack.model.Summary.DayTotal;
+import com.timetotrack.timetotrack.model.Summary.ProjectTotal;
+import com.timetotrack.timetotrack.model.Summary;
 import com.timetotrack.timetotrack.model.TimeEntry;
 import io.vertx.core.Future;
 
 import java.time.Clock;
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +78,55 @@ public class TimeEntryService {
                 .compose(stopped -> stopped
                         .map(id -> load(id, userId))
                         .orElseGet(() -> Future.failedFuture(new ConflictException("No timer is running"))));
+    }
+
+    static final Duration MAX_SUMMARY_RANGE = Duration.ofDays(366);
+
+    public Future<Summary> summary(int userId, Instant from, Instant to, String tz) {
+        if (from == null || to == null) {
+            return Future.failedFuture(new ValidationException("from and to are required"));
+        }
+        if (!from.isBefore(to)) {
+            return Future.failedFuture(new ValidationException("from must be before to"));
+        }
+        if (Duration.between(from, to).compareTo(MAX_SUMMARY_RANGE) > 0) {
+            return Future.failedFuture(new ValidationException("The range must be at most 366 days"));
+        }
+        String zoneId;
+        try {
+            zoneId = postgresZone(tz);
+        } catch (ValidationException e) {
+            return Future.failedFuture(e);
+        }
+        Instant now = clock.instant();
+        Future<List<ProjectTotal>> byProject = entries.summaryByProject(userId, from, to, now);
+        Future<List<DayTotal>> byDay = entries.summaryByDay(userId, from, to, now, zoneId);
+        return Future.all(byProject, byDay).map(done -> new Summary(
+                byProject.result().stream().mapToLong(ProjectTotal::seconds).sum(),
+                byProject.result(),
+                byDay.result()));
+    }
+
+    /**
+     * Postgres interprets numeric offsets like "+03:00" with the POSIX (inverted) sign, so only
+     * region ids and UTC are accepted.
+     */
+    private static String postgresZone(String tz) {
+        if (tz == null) {
+            return "UTC";
+        }
+        try {
+            ZoneId zone = ZoneId.of(tz);
+            if (zone instanceof ZoneOffset offset) {
+                if (offset.equals(ZoneOffset.UTC)) {
+                    return "UTC";
+                }
+                throw new ValidationException("tz must be an IANA time zone such as America/Argentina/Buenos_Aires");
+            }
+            return zone.getId();
+        } catch (DateTimeException e) {
+            throw new ValidationException("tz must be an IANA time zone such as America/Argentina/Buenos_Aires");
+        }
     }
 
     private Future<TimeEntry> load(long id, int userId) {
