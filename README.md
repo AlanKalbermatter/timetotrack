@@ -16,7 +16,7 @@ docker compose up --build
 Open <http://localhost:3000> and sign in with the demo account **demo@timetotrack.dev / demo1234**, or create your own.
 API docs (Swagger UI) are at <http://localhost:3000/api/docs>.
 
-If port 8080 is already taken on your machine, publish the API elsewhere: `API_PUBLISHED_PORT=18080 docker compose up --build`. The web app on :3000 is unaffected, because nginx reaches the API over the compose network.
+All ports are published on `127.0.0.1` only (the compose credentials and default `JWT_SECRET` are public, so the stack is never exposed to your network). If 8080 or 5432 is already taken on your machine, move them: `API_PUBLISHED_PORT=18080 DB_PUBLISHED_PORT=55432 docker compose up --build`. The web app on :3000 is unaffected, because nginx reaches the API over the compose network.
 
 ## Architecture
 

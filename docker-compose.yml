@@ -10,7 +10,7 @@ services:
       - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
       - db-data:/var/lib/postgresql/data
     ports:
-      - "${DB_PUBLISHED_PORT:-5432}:5432"
+      - "127.0.0.1:${DB_PUBLISHED_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U goldentimer -d goldentimer"]
       interval: 2s
@@ -31,14 +31,14 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "${API_PUBLISHED_PORT:-8080}:8080"
+      - "127.0.0.1:${API_PUBLISHED_PORT:-8080}:8080"
 
   frontend:
     build: ./frontend
     depends_on:
       - backend
     ports:
-      - "3000:80"
+      - "127.0.0.1:3000:80"
 
 volumes:
   db-data:
