@@ -13,6 +13,7 @@ interface NewTimeEntryModalProps {
 
 const ONE_HOUR_MS = 60 * 60 * 1000;
 
+/** Logs a finished block of time. Inputs are local time; they are sent to the API as UTC ISO strings. */
 const NewTimeEntryModal = ({ projects, onClose, onSave }: NewTimeEntryModalProps) => {
     const [projectId, setProjectId] = useState<number>(projects[0]?.id ?? 0);
     const [description, setDescription] = useState("");

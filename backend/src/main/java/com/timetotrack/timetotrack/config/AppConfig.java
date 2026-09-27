@@ -7,6 +7,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * Typed application configuration, read once at startup from environment variables.
+ *
+ * <p>{@code APP_PROFILE} defaults to {@code dev}, which falls back to a fixed development JWT secret.
+ * Any other profile refuses to start without {@code JWT_SECRET}.
+ */
 public record AppConfig(String profile, int gatewayPort, ServicePorts ports, DbConfig db, String jwtSecret) {
 
     public static final String DEV_JWT_SECRET = "dev-only-insecure-jwt-secret-change-me";

@@ -8,6 +8,7 @@ interface ThemeContextProps {
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
+/** Light/dark theme, persisted in localStorage and applied as the `dark` class on <html>. */
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [darkMode, setDarkMode] = useState(() => {
         return localStorage.getItem("theme") === "dark";

@@ -7,6 +7,9 @@ import io.vertx.core.Future;
 
 import java.util.List;
 
+/**
+ * Read-only access to team members; accounts are created through {@code AuthService}.
+ */
 public class UserService {
 
     private final UserDao users;

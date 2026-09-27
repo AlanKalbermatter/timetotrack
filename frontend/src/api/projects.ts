@@ -1,3 +1,4 @@
+/** Projects API: each project belongs to one customer. */
 import { api } from "./client";
 import { Project } from "./types";
 

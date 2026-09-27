@@ -7,6 +7,7 @@ interface PageCardProps {
     children: React.ReactNode;
 }
 
+/** Card with a title row and an optional action (usually a "+ New" button). */
 const PageCard = ({ title, action, children }: PageCardProps) => (
     <section className={cardClass}>
         <div className="flex items-center justify-between gap-4 mb-4">

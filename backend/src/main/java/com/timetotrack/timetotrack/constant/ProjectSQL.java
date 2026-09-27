@@ -1,5 +1,8 @@
 package com.timetotrack.timetotrack.constant;
 
+/**
+ * SQL for projects.
+ */
 public final class ProjectSQL {
 
     private static final String SELECT =

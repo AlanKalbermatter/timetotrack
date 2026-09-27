@@ -1,3 +1,4 @@
+/** Team directory (read-only; accounts are created through registration). */
 import { api } from "./client";
 import { User } from "./types";
 

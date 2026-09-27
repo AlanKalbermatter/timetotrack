@@ -1,3 +1,4 @@
+/** Tailwind class strings shared by pages and modals, so cards, tables and buttons look the same everywhere. */
 export const cardClass = "bg-white dark:bg-[#1E1E2F] text-gray-800 dark:text-gray-100 shadow rounded-lg p-6";
 export const primaryButtonClass =
     "bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2 rounded shadow text-sm";

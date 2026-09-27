@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import { inputClass, primaryButtonClass } from "../components/ui";
 import AuthLayout from "./AuthLayout";
 
+/** Sign-up page. A new account is signed in immediately. */
 const Register = () => {
     const { register, isAuthenticated } = useAuth();
     const navigate = useNavigate();

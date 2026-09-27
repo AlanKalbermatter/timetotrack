@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * Business rules for time entries: one running timer per user (enforced by a partial unique index),
+ * manual entries must end after they start, and summaries clip entries to the requested range.
+ * Time comes from an injected {@link Clock} so tests can pin "now".
+ */
 public class TimeEntryService {
 
     static final int MAX_DESCRIPTION_LENGTH = 500;

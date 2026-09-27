@@ -8,6 +8,9 @@ import com.timetotrack.timetotrack.http.ServiceVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
+/**
+ * Public routes: {@code POST /api/auth/register} (201) and {@code POST /api/auth/login} (200), both returning {@link AuthResult}.
+ */
 public class AuthApiVerticle extends ServiceVerticle {
 
     private final AuthService auth;

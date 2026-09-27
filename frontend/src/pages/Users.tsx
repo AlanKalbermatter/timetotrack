@@ -4,6 +4,7 @@ import { AsyncContent } from "../components/states";
 import { cellClass, rowClass, tableClass, theadClass } from "../components/ui";
 import { useAsync } from "../hooks/useAsync";
 
+/** Read-only team directory. */
 const Users = () => {
     const users = useAsync(listUsers);
 

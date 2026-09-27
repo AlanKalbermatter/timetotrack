@@ -13,6 +13,10 @@ import io.vertx.core.Vertx;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * Registration and login. Emails are normalised to lower case, passwords are hashed with PBKDF2 on the
+ * worker pool, and failed logins return the same error whether the email or the password was wrong.
+ */
 public class AuthService {
 
     static final int MIN_PASSWORD_LENGTH = 8;

@@ -8,6 +8,7 @@ import { AsyncContent, ErrorMessage } from "../components/states";
 import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from "../components/ui";
 import { useAsync } from "../hooks/useAsync";
 
+/** Customers list with create and delete (deleting a customer that has projects is rejected by the API). */
 const Customers = () => {
     const customers = useAsync(listCustomers);
     const [showModal, setShowModal] = useState(false);

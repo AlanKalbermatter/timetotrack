@@ -1,3 +1,4 @@
+/** Customers API: shared across the whole team. */
 import { api } from "./client";
 import { Customer } from "./types";
 

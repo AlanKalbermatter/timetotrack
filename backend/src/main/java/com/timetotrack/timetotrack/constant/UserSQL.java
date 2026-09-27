@@ -1,5 +1,8 @@
 package com.timetotrack.timetotrack.constant;
 
+/**
+ * SQL for users. {@code "user"} is quoted because it is a reserved word in Postgres.
+ */
 public final class UserSQL {
 
     private static final String COLUMNS = "user_id, username, email, full_name";

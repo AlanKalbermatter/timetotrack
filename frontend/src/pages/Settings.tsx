@@ -1,6 +1,7 @@
 import PageCard from "../components/PageCard";
 import { useTheme } from "../context/ThemeContext";
 
+/** User preferences (currently the light/dark theme). */
 const Settings = () => {
     const { darkMode, toggleDarkMode } = useTheme();
 

@@ -7,6 +7,9 @@ import com.timetotrack.timetotrack.model.Customer;
 import com.timetotrack.timetotrack.service.CustomerService;
 import io.vertx.ext.web.Router;
 
+/**
+ * Routes: {@code GET|POST /api/customers}, {@code GET|PUT|DELETE /api/customers/:id}.
+ */
 public class CustomerApiVerticle extends ServiceVerticle {
 
     private final CustomerService customers;

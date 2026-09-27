@@ -11,6 +11,7 @@ import Settings from "./pages/Settings";
 import TimeEntries from "./pages/TimeEntries";
 import Users from "./pages/Users";
 
+/** Routing: /login and /register are public; everything else requires a session and renders inside MainLayout. */
 const App = () => (
     <Router>
         <AuthProvider>

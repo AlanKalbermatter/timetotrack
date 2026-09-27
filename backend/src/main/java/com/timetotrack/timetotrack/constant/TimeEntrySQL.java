@@ -1,5 +1,8 @@
 package com.timetotrack.timetotrack.constant;
 
+/**
+ * SQL for time entries. Every statement filters by {@code user_id}, so one user can never see or change another's rows.
+ */
 public final class TimeEntrySQL {
 
     private static final String SELECT =

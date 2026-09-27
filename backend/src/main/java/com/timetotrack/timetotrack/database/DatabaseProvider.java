@@ -7,6 +7,9 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.PoolOptions;
 
+/**
+ * Builds the shared reactive Postgres connection pool used by every DAO.
+ */
 public final class DatabaseProvider {
 
     private DatabaseProvider() {

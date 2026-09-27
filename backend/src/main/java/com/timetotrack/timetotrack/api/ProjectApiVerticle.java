@@ -8,6 +8,9 @@ import com.timetotrack.timetotrack.service.ProjectService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
+/**
+ * Routes: {@code GET|POST /api/projects}, {@code GET|PUT|DELETE /api/projects/:id}.
+ */
 public class ProjectApiVerticle extends ServiceVerticle {
 
     private final ProjectService projects;

@@ -7,6 +7,7 @@ interface NewCustomerModalProps {
     onSave: (name: string) => Promise<void>;
 }
 
+/** Creates a customer. API errors (e.g. duplicate name) are shown inside the modal. */
 const NewCustomerModal = ({ onClose, onSave }: NewCustomerModalProps) => {
     const [name, setName] = useState("");
 

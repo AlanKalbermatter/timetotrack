@@ -4,6 +4,9 @@ import io.vertx.core.Future;
 
 import java.util.Optional;
 
+/**
+ * The resource does not exist, or does not belong to the caller → HTTP 404.
+ */
 public class NotFoundException extends ApiException {
 
     public NotFoundException(String message) {

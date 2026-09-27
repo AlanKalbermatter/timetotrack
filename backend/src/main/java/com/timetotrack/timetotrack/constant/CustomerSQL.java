@@ -1,5 +1,8 @@
 package com.timetotrack.timetotrack.constant;
 
+/**
+ * SQL for customers.
+ */
 public final class CustomerSQL {
 
     public static final String SELECT_ALL = "SELECT customer_id, customer_name FROM customer ORDER BY customer_name";

@@ -16,6 +16,7 @@ type WeeklyTimeChartProps = {
     labels: string[];
 };
 
+/** Line chart of hours tracked per day, fed by the summary endpoint's byDay totals. */
 const WeeklyTimeChart = ({ data, labels }: WeeklyTimeChartProps) => {
     const chartData = {
         labels,

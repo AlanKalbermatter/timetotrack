@@ -11,6 +11,9 @@ import io.vertx.sqlclient.Tuple;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data access for customers. Constraint violations are left to {@code CustomerService} to translate.
+ */
 public class CustomerDao {
 
     private final Pool pool;

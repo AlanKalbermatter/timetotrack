@@ -11,6 +11,9 @@ import io.vertx.sqlclient.Tuple;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data access for projects; reads join the customer so responses carry {@code customerName}.
+ */
 public class ProjectDao {
 
     private final Pool pool;

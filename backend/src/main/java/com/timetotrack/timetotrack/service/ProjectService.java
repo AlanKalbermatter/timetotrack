@@ -10,6 +10,10 @@ import io.vertx.core.Future;
 
 import java.util.List;
 
+/**
+ * Validates project names and translates constraint violations: unknown customer → 400,
+ * duplicate name within a customer → 409, deleting a project with time entries → 409.
+ */
 public class ProjectService {
 
     static final int MAX_NAME_LENGTH = 120;

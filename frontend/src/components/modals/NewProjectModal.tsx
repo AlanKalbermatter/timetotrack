@@ -9,6 +9,7 @@ interface NewProjectModalProps {
     onSave: (name: string, customerId: number) => Promise<void>;
 }
 
+/** Creates a project under one of the existing customers. */
 const NewProjectModal = ({ customers, onClose, onSave }: NewProjectModalProps) => {
     const [name, setName] = useState("");
     const [customerId, setCustomerId] = useState<number>(customers[0]?.id ?? 0);

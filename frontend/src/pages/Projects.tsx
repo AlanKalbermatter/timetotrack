@@ -9,6 +9,7 @@ import { AsyncContent, ErrorMessage } from "../components/states";
 import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from "../components/ui";
 import { useAsync } from "../hooks/useAsync";
 
+/** Projects list with create and delete. Creating needs at least one customer. */
 const Projects = () => {
     const projects = useAsync(listProjects);
     const customers = useAsync(listCustomers);

@@ -10,6 +10,7 @@ import { cellClass, primaryButtonClass, rowClass, tableClass, theadClass } from 
 import { useAsync } from "../hooks/useAsync";
 import { formatDateTime, formatDuration, secondsBetween } from "../utils/time";
 
+/** The signed-in user's entries from the last 30 days, with manual entry and delete. */
 const TimeEntries = () => {
     const entries = useAsync(() => listTimeEntries());
     const projects = useAsync(listProjects);

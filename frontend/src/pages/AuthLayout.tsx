@@ -7,6 +7,7 @@ interface AuthLayoutProps {
     children: React.ReactNode;
 }
 
+/** Centered card layout shared by the sign-in and sign-up pages. */
 const AuthLayout = ({ title, footer, children }: AuthLayoutProps) => (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#12121A] px-4">
         <div className="w-full max-w-sm">

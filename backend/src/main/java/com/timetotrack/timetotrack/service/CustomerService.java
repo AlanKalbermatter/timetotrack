@@ -10,6 +10,10 @@ import io.vertx.core.Future;
 
 import java.util.List;
 
+/**
+ * Validates customer names and translates constraint violations: duplicate name → 409,
+ * deleting a customer that still has projects → 409.
+ */
 public class CustomerService {
 
     static final int MAX_NAME_LENGTH = 120;

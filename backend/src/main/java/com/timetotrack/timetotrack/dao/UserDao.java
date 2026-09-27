@@ -12,6 +12,9 @@ import io.vertx.sqlclient.Tuple;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data access for {@code "user"} rows. Only {@link #findCredentialsByEmail} ever reads the password hash.
+ */
 public class UserDao {
 
     private final Pool pool;

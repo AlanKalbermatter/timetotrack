@@ -27,6 +27,10 @@ const readStoredUser = (): User | null => {
     }
 };
 
+/**
+ * Holds the session (JWT + user) in localStorage and exposes login/register/logout.
+ * Any 401 from the API logs the user out.
+ */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(readStoredUser);
 

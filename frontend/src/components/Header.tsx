@@ -8,6 +8,7 @@ const initialsOf = (fullName: string): string =>
         .map((part) => part[0].toUpperCase())
         .join("");
 
+/** Top bar: current user's initials and name, app title, and log out. */
 const Header = () => {
     const { user, logout } = useAuth();
 

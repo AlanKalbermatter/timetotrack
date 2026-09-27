@@ -5,6 +5,9 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
+/**
+ * Tracked time inside a range: the total, a per-project breakdown and a per-day breakdown.
+ */
 public record Summary(long totalSeconds, List<ProjectTotal> byProject, List<DayTotal> byDay) {
 
     public record ProjectTotal(int projectId, String projectName, long seconds) {

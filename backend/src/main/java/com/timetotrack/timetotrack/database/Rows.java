@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Small helpers for turning reactive {@code RowSet}s into lists and optionals.
+ */
 public final class Rows {
 
     private Rows() {

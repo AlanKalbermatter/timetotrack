@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import { inputClass, primaryButtonClass } from "../components/ui";
 import AuthLayout from "./AuthLayout";
 
+/** Sign-in page. After login it returns to the page that required authentication. */
 const Login = () => {
     const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();

@@ -1,3 +1,4 @@
+/** Public auth endpoints. Both return a JWT plus the user profile; AuthContext stores them. */
 import { api } from "./client";
 import { AuthResponse } from "./types";
 
